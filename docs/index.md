@@ -65,7 +65,7 @@ flowchart LR
 
 !!! note "`demo-commercial-template` örneği"
     Aşağıdaki komutlar mevcut katalogdaki `demo-commercial-template` için gösterilmektedir.
-    Diğer template'ler için [Template Kataloğu](templates/demo-commercial.md) sayfasına bakın.
+    Diğer template'ler için aşağıdaki [Template Kataloğu](#template-kataloğu) bölümüne bakın.
 
 === "node-service"
 
