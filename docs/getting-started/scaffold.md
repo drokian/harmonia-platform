@@ -35,7 +35,7 @@ pwsh -File ./templates/demo-commercial-template/development/scripts/scaffold-dem
 | Parametre | Zorunlu | Açıklama |
 |-----------|---------|----------|
 | `-TargetPath` | Evet | Workspace'in oluşturulacağı dizin (örn. `D:\work\my-product`) |
-| `-Stack` | Evet | Stack tipi: `node-service` · `python-service` · `nextjs-app` |
+| `-Stack` | Hayır (varsayılan: `node-service`) | Stack tipi: `node-service` · `python-service` · `nextjs-app` |
 | `-InitGitRepos` | Hayır | Belirtilirse `demo/` ve `commercial/` altında `git init` çalıştırılır |
 | `-KeepDevelopmentLocal` | Hayır | Varsayılan: açık. `development/` klasörünü `.gitignore`'a ekler |
 
