@@ -48,6 +48,7 @@ Her iki repo için:
 ```bash
 git add .
 git commit -m "chore: scaffold demo-commercial-template v1.0.0"
+git branch -M main
 git push -u origin main
 ```
 
