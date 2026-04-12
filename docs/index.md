@@ -1,6 +1,6 @@
 # Harmonia
 
-**AI ajan destekli tam otomatik hazır proje template platformu.**
+**AI ajan destekli açık proje template platformu.**
 
 *Tema: uyum, düzen, denge.*
 
@@ -8,21 +8,24 @@
 
 ## Platform Nedir
 
+Harmonia, yazılım projelerine **hızlı, tutarlı ve güvenli bir başlangıç** sağlamak için tasarlanmış bir template platformudur. Her template belirli bir problemi çözmek ya da belirli bir mimari kararı karşılamak üzere hazırlanır; scaffold anında hazır workspace iskeletine, CI/release altyapısına ve araç entegrasyonlarına dönüşür.
+
 ```mermaid
 flowchart LR
-    H["🏛️ Harmonia\nMeta-Workspace"]
-    T["📦 Template\ndemo-commercial-template v1.0.0"]
-    S["⚡ Scaffold\nscript"]
-    D["🗂️ Demo Repo\n(public)"]
-    C["🔒 Commercial Repo\n(private)"]
+    H["🏛️ Harmonia\nPlatform"]
 
-    H -->|"barındırır"| T
-    T -->|"scaffold edilir"| S
-    S -->|"üretir"| D
-    S -->|"üretir"| C
+    subgraph catalog["📚 Template Kataloğu"]
+        T1["📦 demo-commercial-template\nv1.0.0"]
+        T2["📦 ...\n(ileride)"]
+    end
+
+    S["⚡ Scaffold"]
+    W["🗂️ Workspace\n(CI · yapı · araçlar)"]
+
+    H --> catalog
+    T1 -->|"seçilir"| S
+    S -->|"üretir"| W
 ```
-
-Harmonia, yazılım projelerini **demo** (public) ve **commercial** (private) olarak iki bağımsız repo halinde yönetmek için gerekli workspace iskeletini ve CI/release altyapısını otomatik üretir.
 
 ---
 
@@ -30,29 +33,29 @@ Harmonia, yazılım projelerini **demo** (public) ve **commercial** (private) ol
 
 <div class="grid cards" markdown>
 
-- :material-folder-multiple-outline: **Manifest-Driven Yapı**
+- :material-view-grid-plus-outline: **Büyüyen Template Kataloğu**
 
-    Template içeriği `.github/template-manifest.yml` ile tanımlanır, her PR'da otomatik doğrulanır.
+    Her template farklı bir mimari karar veya problemi karşılar. Platform büyüdükçe katalog genişler; doğru template seçilir, workspace dakikalar içinde hazır olur.
 
-- :material-source-branch-check: **Single-Source Kuralı**
+- :material-file-document-check-outline: **Manifest-Driven Yapı**
 
-    Versiyon, changelog, README baseline ve manifest; birlikte taşınır, hiçbiri tek başına değişmez.
+    Her template kendi `.github/template-manifest.yml` contract'ıyla gelir. İçerik, PR'larda otomatik doğrulanır; beklenti dışı değişiklik CI'dan geçemez.
 
-- :material-layers-outline: **Stack Overlay Sistemi**
+- :material-link-lock: **Single-Source Disiplini**
 
-    `node-service`, `python-service`, `nextjs-app` için hazır başlangıç dosyaları scaffold anında uygulanır.
+    Versiyon, changelog, README baseline ve manifest; birlikte taşınır, hiçbiri tek başına değişmez. Tutarsızlık pipeline tarafından engellenir.
 
-- :material-tag-check-outline: **Tag-Gated Release**
+- :material-rocket-launch-outline: **Scaffold Otomasyonu**
 
-    `main` branch'i yalnız tag'li durumları barındırır. Tagsiz merge kabul edilmez.
+    Template seç, parametreleri ver — tek komutla hazır workspace, başlangıç dosyaları ve CI/CD altyapısı üretilir.
 
-- :material-shield-lock-outline: **Gizlilik Öncelikli**
+- :material-tag-check-outline: **Tag-Gated Release Disiplini**
 
-    Geliştirme süreci, backlog ve kararlar tamamen private repo'da yaşar; public yüz yalnız profesyonel içerik barındırır.
+    `main` branch yalnız tag'li durumları barındırır. Her template'de versiyon disiplini zorunludur; tagsiz merge kabul edilmez.
 
-- :material-robot-outline: **Çoklu AI Ajan Desteği**
+- :material-robot-outline: **AI Ajan Uyumu**
 
-    Claude Code, GitHub Copilot ve diğer ajanlar için ortak operasyon kuralları tek kaynaktan yönetilir.
+    Her template Claude Code, GitHub Copilot ve diğer ajanlar için hazır operasyon kurallarıyla gelir; AI desteği kurulum gerektirmez.
 
 </div>
 
@@ -60,7 +63,9 @@ Harmonia, yazılım projelerini **demo** (public) ve **commercial** (private) ol
 
 ## Hızlı Başlangıç
 
-Yeni bir workspace oluşturmak için:
+!!! note "`demo-commercial-template` örneği"
+    Aşağıdaki komutlar mevcut katalogdaki `demo-commercial-template` için gösterilmektedir.
+    Diğer template'ler için [Template Kataloğu](templates/demo-commercial.md) sayfasına bakın.
 
 === "node-service"
 
@@ -96,11 +101,11 @@ Adım adım kurulum için [Başlarken → Workspace Oluşturma](getting-started/
 
 ---
 
-## Mevcut Template
+## Template Kataloğu
 
-| Template | Versiyon | Stack Desteği |
-|----------|----------|---------------|
-| [demo-commercial-template](templates/demo-commercial.md) | `v1.0.0` | node-service · python-service · nextjs-app |
+| Template | Versiyon | Ne Çözer |
+|----------|----------|----------|
+| [demo-commercial-template](templates/demo-commercial.md) | `v1.0.0` | Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme |
 
 ---
 
