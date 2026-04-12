@@ -1,0 +1,157 @@
+name: Template Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure manifest file exists
+        shell: bash
+        run: |
+          if [ ! -f ".github/template-manifest.yml" ]; then
+            echo "Missing .github/template-manifest.yml"
+            exit 1
+          fi
+
+      - name: Validate required directories
+        shell: bash
+        run: |
+          extract_list() {
+            local section="$1"
+            awk -v section="$section" '
+              $0 ~ "^"section":" {in_section=1; next}
+              in_section && $0 ~ "^[^[:space:]].*:" {in_section=0}
+              in_section && $0 ~ /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t required_dirs < <(extract_list required_dirs)
+
+          if [ "${#required_dirs[@]}" -eq 0 ]; then
+            echo "No required_dirs found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          for path in "${required_dirs[@]}"; do
+            if [ ! -d "$path" ]; then
+              echo "Missing required directory: $path"
+              exit 1
+            fi
+          done
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          extract_list() {
+            local section="$1"
+            awk -v section="$section" '
+              $0 ~ "^"section":" {in_section=1; next}
+              in_section && $0 ~ "^[^[:space:]].*:" {in_section=0}
+              in_section && $0 ~ /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t required_files < <(extract_list required_files)
+
+          if [ "${#required_files[@]}" -eq 0 ]; then
+            echo "No required_files found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required file: $file"
+              exit 1
+            fi
+          done
+
+      - name: Validate forbidden artifacts are absent
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          extract_list() {
+            local section="$1"
+            awk -v section="$section" '
+              $0 ~ "^"section":" {in_section=1; next}
+              in_section && $0 ~ "^[^[:space:]].*:" {in_section=0}
+              in_section && $0 ~ /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t forbidden_globs < <(extract_list forbidden_globs)
+
+          if [ "${#forbidden_globs[@]}" -eq 0 ]; then
+            echo "No forbidden_globs found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          for pattern in "${forbidden_globs[@]}"; do
+            if compgen -G "$pattern" > /dev/null; then
+              echo "Forbidden artifact matched pattern: $pattern"
+              exit 1
+            fi
+          done
+
+      - name: Validate version-change policy
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.event.pull_request.head.sha }}"
+          changed_files="$(git diff --name-only "$base_sha" "$head_sha")"
+
+          echo "Changed files between PR base and head:"
+          echo "$changed_files"
+
+          if echo "$changed_files" | grep -qx "TEMPLATE_VERSION"; then
+            echo "TEMPLATE_VERSION change detected"
+
+            if ! echo "$changed_files" | grep -qx "TEMPLATE_CHANGELOG.md"; then
+              echo "TEMPLATE_VERSION changed but TEMPLATE_CHANGELOG.md was not updated"
+              exit 1
+            fi
+
+            version="$(tr -d '\r\n' < TEMPLATE_VERSION)"
+
+            if ! [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "TEMPLATE_VERSION must follow semver with v prefix (example v1.2.3)"
+              exit 1
+            fi
+
+            if ! grep -Eq "^## ${version} - [0-9]{4}-[0-9]{2}-[0-9]{2}$" TEMPLATE_CHANGELOG.md; then
+              echo "Missing changelog heading for changed version: ${version}"
+              exit 1
+            fi
+
+            expected_line="Current baseline: \`${version}\`"
+            if ! grep -Fq "$expected_line" README.md; then
+              echo "README baseline line must be updated when TEMPLATE_VERSION changes"
+              exit 1
+            fi
+
+            echo "Version-change policy checks passed"
+          else
+            echo "TEMPLATE_VERSION not changed in this PR, skipping version-change checks"
+          fi
+
+          echo "Template structure validation passed"

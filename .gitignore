@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Env / secrets
+.env
+.env.*
+
+# Logs / temp
+*.log
+*.tmp
+
+# AI agent local configs (private)
+.claude/
+CLAUDE.md
+.github/copilot-instructions.md
+
+# Internal development process (private)
+development/

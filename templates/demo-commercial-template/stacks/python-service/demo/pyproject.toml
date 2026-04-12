@@ -1,0 +1,8 @@
+[project]
+name = "demo-service"
+version = "0.1.0"
+description = "Demo service starter for the demo/commercial template"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
