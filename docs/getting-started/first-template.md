@@ -52,17 +52,7 @@ git branch -M main
 git push -u origin main
 ```
 
-## 4. Template Sürümü Takibi
-
-Scaffold edilen workspace, Harmonia template'inin hangi sürümünden üretildiğini `TEMPLATE_VERSION` dosyasıyla izler.
-
-```
-demo/TEMPLATE_VERSION   → v1.0.0
-```
-
-Template'in yeni sürümleri yayımlandığında bu dosyayı güncelleyerek hangi özellik ve düzeltmelerin geldiğini takip edebilirsiniz. Sürüm geçmişi için Yenilikler sayfasına bakın.
-
-## 5. Geliştirmeye Başlayın
+## 4. Geliştirmeye Başlayın
 
 Workspace hazır. Kendi ürün kodunuzu `demo/` ve `commercial/` dizinleri içinde geliştirmeye başlayabilirsiniz.
 
