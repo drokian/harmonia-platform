@@ -95,7 +95,7 @@ flowchart LR
     ```
 
 !!! tip "Gereksinim"
-    PowerShell 7+ gereklidir. Linux/WSL'de `pwsh`, Windows'ta `powershell.exe` kullanın.
+    PowerShell 7+ gereklidir. Linux/WSL'de ve Windows'ta `pwsh` kullanın.
 
 Adım adım kurulum için [Başlarken → Workspace Oluşturma](getting-started/scaffold.md) sayfasına gidin.
 
