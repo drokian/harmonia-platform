@@ -105,7 +105,7 @@ Adım adım kurulum için [Başlarken → Workspace Oluşturma](getting-started/
 
 | Template | Versiyon | Ne Çözer |
 |----------|----------|----------|
-| [demo-commercial-template](templates/demo-commercial.md) | `v1.0.0` | Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme |
+| demo-commercial-template | `v1.0.0` | Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme |
 
 ---
 
