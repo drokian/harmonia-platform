@@ -60,7 +60,7 @@ Scaffold edilen workspace, Harmonia template'inin hangi sürümünden üretildi�
 demo/TEMPLATE_VERSION   → v1.0.0
 ```
 
-Template'in yeni sürümleri yayımlandığında bu dosyayı güncelleyerek hangi özellik ve düzeltmelerin geldiğini takip edebilirsiniz. Sürüm geçmişi için [Yenilikler](../whats-new/index.md) sayfasına bakın.
+Template'in yeni sürümleri yayımlandığında bu dosyayı güncelleyerek hangi özellik ve düzeltmelerin geldiğini takip edebilirsiniz. Sürüm geçmişi için Yenilikler sayfasına bakın.
 
 ## 5. Geliştirmeye Başlayın
 
