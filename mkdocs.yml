@@ -93,6 +93,9 @@ markdown_extensions:
 
 nav:
   - Ana Sayfa: index.md
+  - Başlarken:
+      - Workspace Oluşturma: getting-started/scaffold.md
+      - İlk Template: getting-started/first-template.md
 
 extra:
   social:
