@@ -4,7 +4,7 @@ Bu rehber, Harmonia'nın `scaffold-demo-commercial.ps1` scripti ile yeni bir wor
 
 ## Gereksinimler
 
-- **PowerShell 7+** — Linux/WSL'de `pwsh`, Windows'ta `powershell.exe`
+- **PowerShell 7+** — Linux/WSL'de ve Windows'ta `pwsh`
 - Harmonia meta-workspace'in lokal kopyası (`drokian/harmonia-platform`)
 
 ## Scaffold Akışı
