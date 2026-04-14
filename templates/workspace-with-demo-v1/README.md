@@ -30,7 +30,7 @@ stacks/
   node-service/
   python-service/
   nextjs-app/
-development/                → .gitignored — ozel surec notlari, backlog, kararlar
+development/                → ozel surec notlari, backlog, kararlar (scaffold ile .gitignore'a eklenir)
 ```
 
 > **Insa Durumu:** Bu template kademeli olarak tamamlanmaktadir.
@@ -53,7 +53,7 @@ development/                → .gitignored — ozel surec notlari, backlog, kar
 > Scaffold scripti WD-005 PR'inda eklenecektir. Asagidaki komutlar tamamlandiginda gecerli olacaktir.
 
 ```powershell
-# Harmonia repo kokunden:
+# Harmonia repo kokunden (script WD-005 ile development/scripts/ altina eklenecek):
 pwsh -File ./templates/workspace-with-demo-v1/development/scripts/scaffold-workspace-with-demo.ps1 `
     -TargetPath "D:\work\my-workspace" `
     -Stack node-service `

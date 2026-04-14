@@ -1,6 +1,7 @@
 required_dirs:
   - .github
   - .github/workflows
+  - .claude
   - scripts
   - docs
   - docs/installation
@@ -36,6 +37,7 @@ required_files:
   - CLAUDE.md
   - .github/template-manifest.yml
   - .github/copilot-instructions.md
+  - .claude/CLAUDE.md
   - demo/README.md
   - backups/latest.json
   - docs/index.md
@@ -51,6 +53,9 @@ forbidden_globs:
   - "**/.env.*"
   - "**/secrets.*"
   - "**/*.key"
+  - "**/*.pem"
+  - "**/*.p12"
+  - "**/*.pfx"
   - "**/credentials.*"
   - "**/*.log"
   - "**/coverage/**"
