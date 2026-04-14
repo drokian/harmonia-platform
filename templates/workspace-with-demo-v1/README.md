@@ -18,18 +18,10 @@ Bu template, ayni urunun iki ayri repo olarak yonetildigi yapilari destekler:
 .github/
   copilot-instructions.md   → AI ajan kurallari (tek kaynak)
   template-manifest.yml     → required_dirs, required_files, forbidden_globs, demo_sync_denylist
-  workflows/
-    template-validation.yml → manifest dogrulama
-    ci.yml                  → lint / build
-    release.yml             → tag + changelog zorunlulugu
-    submodule-sync.yml      → demo submodule guncelleme
+  workflows/                → CI workflow'lari (WD-003 PR'inda eklenecek)
 CLAUDE.md                   → Claude Code stub
-scripts/
-  sync-to-demo.ps1          → workspace → demo guvenli kopyalama
-  validate-template.ps1     → manifest - filesystem karsilastirmasi
-  verify-no-secrets-in-demo.ps1 → demo/ icin secret taramasi
-  bump-template-version.ps1 → TEMPLATE_VERSION + README + CHANGELOG
-demo/                       → public demo (git submodule)
+scripts/                    → Operasyon scriptleri (WD-002 PR'inda eklenecek)
+demo/                       → public demo (git submodule; scaffold sirasinda ayarlanir)
 docs/                       → MkDocs workspace dokumantasyonu
 backups/
   latest.json               → tracked
@@ -41,6 +33,13 @@ stacks/
 development/                → .gitignored — ozel surec notlari, backlog, kararlar
 ```
 
+> **Insa Durumu:** Bu template kademeli olarak tamamlanmaktadir.
+> - WD-001 (bu PR): manifest, iskelet, temel konfigurasyon ✓
+> - WD-002: `scripts/` icerisindeki 4 PowerShell scripti
+> - WD-003: `.github/workflows/` CI dosyalari
+> - WD-004: Demo submodule yapisi
+> - WD-005: Development + MkDocs docs
+
 ## Guvenlik Modeli
 
 3 katmanli savunma:
@@ -51,16 +50,17 @@ development/                → .gitignored — ozel surec notlari, backlog, kar
 
 ## Kullanim
 
-Yeni bir workspace olusturmak icin Harmonia scaffold scriptini kullanin:
+> Scaffold scripti WD-005 PR'inda eklenecektir. Asagidaki komutlar tamamlandiginda gecerli olacaktir.
 
 ```powershell
+# Harmonia repo kokunden:
 pwsh -File ./templates/workspace-with-demo-v1/development/scripts/scaffold-workspace-with-demo.ps1 `
     -TargetPath "D:\work\my-workspace" `
     -Stack node-service `
     -InitGitRepos
 ```
 
-Scriptler:
+Operasyon scriptleri (WD-002 PR'inda eklenecek):
 
 ```powershell
 pwsh ./scripts/sync-to-demo.ps1 [-DryRun]
@@ -71,7 +71,7 @@ pwsh ./scripts/bump-template-version.ps1 -Bump patch
 
 ## Template Surumu
 
-`TEMPLATE_VERSION` dosyasinda bulunur. Versiyon guncelleme:
+`TEMPLATE_VERSION` dosyasinda bulunur. Versiyon guncelleme (WD-002 sonrasi):
 
 ```powershell
 pwsh ./scripts/bump-template-version.ps1 -Bump patch

@@ -10,7 +10,16 @@ Bu bolum workspace kurulum adimlarini icerir.
 
 ## Adimlar
 
-1. Bu template'den scaffold scripti ile yeni workspace olusturun.
-2. `demo/` submodule'u ayarlayın: `git submodule add <demo-repo-url> demo`
-3. `.env` dosyasini olusturun (`.env.example` sablonundan).
-4. `pwsh ./scripts/validate-template.ps1` ile yapiyi dogrulayin.
+1. Harmonia scaffold scripti ile yeni workspace olusturun (script WD-005 PR'inda eklenecektir).
+2. Scaffold, `demo/` placeholder dosyalarini otomatik temizler; ardindan demo submodule'u ekleyin:
+   ```bash
+   git submodule add https://github.com/<org>/<repo>-demo demo
+   ```
+3. Projenin ihtiyac duydugu degiskenlerle `.env` dosyasini olusturun.
+4. Template yapisini dogrulayin (script WD-002 PR'inda eklenecektir):
+   ```powershell
+   pwsh ./scripts/validate-template.ps1
+   ```
+
+> **Not:** `scripts/validate-template.ps1` ve diger operasyon scriptleri WD-002 PR'inda,
+> CI workflow dosyalari ise WD-003 PR'inda tamamlanacaktir.

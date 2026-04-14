@@ -4,13 +4,14 @@ Bu dizin, workspace-with-demo-v1 template'inden scaffold edilmis workspace'teki 
 
 ## Onemli
 
-Gercek kullanim senaryosunda `demo/` bir **Git submodule** olarak eklenir:
+Gercek kullanim senaryosunda `demo/` bir **Git submodule** olarak eklenir. Scaffold asamasinda su siralama izlenir:
 
-```bash
-git submodule add https://github.com/<org>/<repo>-demo demo
-```
+1. Scaffold script bu dizin icerigini (README ve `.gitkeep` dosyalari) otomatik temizler.
+2. Ardindan: `git submodule add https://github.com/<org>/<repo>-demo demo`
 
-Bu dizindeki icerik, submodule kurulduktan sonra demo repo'sunun kendi deposuyla yonetilir.
+> **Not:** Bu dizindeki dosyalar (README, `.gitkeep`) yalnizca template kaynak agacinda yer tutucu olarak bulunur. `git submodule add` komutunun calisabilmesi icin hedef workspace'te `demo/` dizini bos olmalidir; scaffold script bunu garantiler.
+
+Scaffold kullanmadan manuel kurulum yapiyorsaniz once bu dizini bosaltip ardindan submodule komutunu calistirin.
 
 ## Guvenlik
 

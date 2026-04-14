@@ -1,4 +1,6 @@
 required_dirs:
+  - .github
+  - .github/workflows
   - scripts
   - docs
   - docs/installation
@@ -23,6 +25,8 @@ required_dirs:
   - development/decisions
   - development/backlogs
 
+# required_files: Yalnizca bu PR'da mevcut dosyalar listelenir.
+# WD-002 (scripts/) ve WD-003 (.github/workflows/) tamamlandiginda bu liste genisler.
 required_files:
   - README.md
   - .gitignore
@@ -32,14 +36,6 @@ required_files:
   - CLAUDE.md
   - .github/template-manifest.yml
   - .github/copilot-instructions.md
-  - .github/workflows/template-validation.yml
-  - .github/workflows/ci.yml
-  - .github/workflows/release.yml
-  - .github/workflows/submodule-sync.yml
-  - scripts/sync-to-demo.ps1
-  - scripts/validate-template.ps1
-  - scripts/verify-no-secrets-in-demo.ps1
-  - scripts/bump-template-version.ps1
   - demo/README.md
   - backups/latest.json
   - docs/index.md
