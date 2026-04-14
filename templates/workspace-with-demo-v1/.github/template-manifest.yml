@@ -1,0 +1,82 @@
+required_dirs:
+  - .github
+  - .github/workflows
+  - .claude
+  - scripts
+  - docs
+  - docs/installation
+  - demo
+  - demo/src
+  - demo/data
+  - demo/docs
+  - backups
+  - stacks
+  - stacks/node-service
+  - stacks/node-service/demo
+  - stacks/node-service/workspace
+  - stacks/python-service
+  - stacks/python-service/demo
+  - stacks/python-service/workspace
+  - stacks/nextjs-app
+  - stacks/nextjs-app/demo
+  - stacks/nextjs-app/workspace
+  - development
+  - development/guides
+  - development/checklists
+  - development/decisions
+  - development/scripts
+  - development/backlogs
+
+# required_files: Yalnizca bu PR'da mevcut dosyalar listelenir.
+# WD-002 (scripts/) ve WD-003 (.github/workflows/) tamamlandiginda bu liste genisler.
+required_files:
+  - README.md
+  - .gitignore
+  - .editorconfig
+  - TEMPLATE_VERSION
+  - TEMPLATE_CHANGELOG.md
+  - CLAUDE.md
+  - .github/template-manifest.yml
+  - .github/copilot-instructions.md
+  - .claude/CLAUDE.md
+  - demo/README.md
+  - backups/latest.json
+  - docs/index.md
+  - docs/installation/index.md
+
+forbidden_globs:
+  - "**/.DS_Store"
+  - "**/Thumbs.db"
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.env"
+  - "**/.env.*"
+  - "**/secrets.*"
+  - "**/*.key"
+  - "**/*.pem"
+  - "**/*.p12"
+  - "**/*.pfx"
+  - "**/credentials.*"
+  - "**/*.log"
+  - "**/coverage/**"
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/bin/**"
+  - "**/obj/**"
+
+demo_sync_denylist:
+  - ".env"
+  - ".env.*"
+  - "secrets.*"
+  - "*.key"
+  - "credentials.*"
+  - "*.pem"
+  - "*.p12"
+  - "*.pfx"
+  - "development/"
+  - "backups/"
+  - ".github/workflows/"
+  - "scripts/"
+  - ".claude/"
+  - "stacks/"

@@ -21,8 +21,8 @@ Thumbs.db
 /CLAUDE.md
 /.github/copilot-instructions.md
 
-# Internal development process (private)
-development/
+# Internal development process (private, root-level only)
+/development/
 templates/**.md
 # Template source files are exceptions — must be tracked
 !templates/workspace-with-demo-v1/
