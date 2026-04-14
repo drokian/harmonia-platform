@@ -26,6 +26,10 @@ required_dirs:
   - development/decisions
   - development/scripts
   - development/backlogs
+  - development/conventions
+  - development/sprints
+  - development/sprints/archive
+  - development/glossary
 
 # required_files: WD-002 tamamlandi, scripts/ eklendi.
 # WD-003 (.github/workflows/) tamamlandiginda bu liste tekrar genisleyecek.
