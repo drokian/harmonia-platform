@@ -66,7 +66,7 @@ $secretPatterns = @(
   "glpat-[A-Za-z0-9\-]{20}",
   "sk-[A-Za-z0-9]{48}",
   "sk-ant-[A-Za-z0-9\-_]{95}",
-  "(?i)(secret|password|passwd|api.?key|token)\s*[=:]\s*[^\s'\""]{8,}"
+  "(?i)(secret|password|passwd|api.?key|token)\s*[=:]\s*[^\s'`"]{8,}"
 )
 
 $skipExtensions = @(".png",".jpg",".jpeg",".gif",".ico",".svg",".woff",".woff2",
@@ -74,11 +74,13 @@ $skipExtensions = @(".png",".jpg",".jpeg",".gif",".ico",".svg",".woff",".woff2",
 
 function Test-Denied {
   param([string]$RelPath)
+  $normalizedRelPath = $RelPath.Replace('\', '/')
   foreach ($pattern in $denylist) {
-    $clean = $pattern.TrimEnd('/')
-    if ($RelPath -like $clean) { return $true }
-    if ($RelPath -like "$clean/*") { return $true }
-    if ($RelPath -like $clean.Replace('/', [IO.Path]::DirectorySeparatorChar)) { return $true }
+    $normalizedPattern = $pattern.Replace('\', '/')
+    $isDirectoryPattern = $normalizedPattern.EndsWith('/')
+    $clean = $normalizedPattern.TrimEnd('/')
+    if ($normalizedRelPath -like $clean) { return $true }
+    if ($isDirectoryPattern -and ($normalizedRelPath -like "$clean/*")) { return $true }
   }
   return $false
 }
@@ -114,7 +116,15 @@ foreach ($source in $Sources) {
   }
 
   foreach ($file in $files) {
-    $relPath = $file.FullName.Replace($templateRoot.ToString(), "").TrimStart([IO.Path]::DirectorySeparatorChar)
+    # Guvenlik: dosyanin template root altinda oldugundan emin ol
+    $fullPath = $file.FullName
+    $rootStr = $templateRoot.ToString().TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
+    if (-not $fullPath.StartsWith($rootStr)) {
+      Write-Fail "Dosya template root disinda: $fullPath"
+      $errorCount++
+      continue
+    }
+    $relPath = $fullPath.Substring($rootStr.Length)
 
     # Denylist kontrolu
     if (Test-Denied -RelPath $relPath) {
@@ -125,7 +135,7 @@ foreach ($source in $Sources) {
 
     # Secret taramasi
     if (Test-HasSecret -FilePath $file.FullName) {
-      Write-Fail "$relPath icinde potansiyel secret tespit edildi — kopyalanmadi."
+      Write-Fail "$relPath icinde potansiyel secret tespit edildi -- kopyalanmadi."
       $errorCount++
       continue
     }

@@ -29,8 +29,8 @@ $patterns = @(
   @{ Name = "GitLab PAT";              Regex = "glpat-[A-Za-z0-9\-]{20}" },
   @{ Name = "OpenAI API Key";          Regex = "sk-[A-Za-z0-9]{48}" },
   @{ Name = "Anthropic API Key";       Regex = "sk-ant-[A-Za-z0-9\-_]{95}" },
-  @{ Name = "Generic secret= assign"; Regex = "(?i)(secret|password|passwd|api.?key|token)\s*[=:]\s*[^\s'\""]{8,}" },
-  @{ Name = ".env value pattern";      Regex = "^[A-Z_]+=[^\s]" }
+  @{ Name = "Generic secret= assign"; Regex = "(?i)(secret|password|passwd|api.?key|token)\s*[=:]\s*[^\s'`"]{8,}" },
+  @{ Name = ".env value pattern";      Regex = '(?m)^\s*[A-Z_]+=[^\s]' }
 )
 
 # Taranmayacak uzantilar (binary)
@@ -57,7 +57,7 @@ foreach ($file in $files) {
     # .env value pattern yalnizca .env* adli dosyalara uygulanir
     if ($p.Name -eq ".env value pattern" -and -not $isEnvFile) { continue }
     if ($content -match $p.Regex) {
-      Write-Hit "$relPath — $($p.Name)"
+      Write-Hit "$relPath -- $($p.Name)"
       $hitCount++
       break
     }
