@@ -11,7 +11,7 @@ workspace/
 ├── backups/                  # Yedek dosyalari (gitlenir, demo'ya gitmez)
 │   └── latest.json
 ├── demo/                     # Public demo submodule (git submodule)
-├── development/              # Ozel surec notlari (.gitignore'da)
+├── development/              # Ozel surec notlari (scaffold/manual adimla .gitignore'a eklenir)
 │   ├── backlogs/
 │   ├── checklists/
 │   ├── conventions/

@@ -65,7 +65,7 @@ Kisa sureli calisma donemi. `development/sprints/current.md` aktif sprint'i, `de
 Bu workspace yapisi ve icindeki tum kurallar. Harmonia meta-workspace'te gelistirilir ve surumlanir.
 
 **TEMPLATE_VERSION**
-Semver formatinda (`vX.Y.Z`) tek satir dosya. `TEMPLATE_CHANGELOG.md`, `README.md` baseline satiri ve manifest ile birlikte Single-Source kuraline tabidir.
+Semver formatinda (`vX.Y.Z`) tek satir dosya. Surum bump/senkronizasyonu `TEMPLATE_CHANGELOG.md` ve `README.md` baseline satiri ile birlikte yurutulur. Manifest surum degerinin senkronuna katilmaz; `required_files` kapsaminda dosya varligini kontrol eder.
 
 ## V
 

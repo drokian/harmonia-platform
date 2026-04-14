@@ -1,6 +1,6 @@
 # development/
 
-Bu klasor **yerel ve ozel** surec notlarini barindirir. Hedef workspace'te `.gitignore` tarafindan hariç tutulur; uzak repoya gitmez.
+Bu klasor **yerel ve ozel** surec notlarini barindirir. Hedef workspace'te scaffold veya manuel kurulum adimiyla `.gitignore` kurali etkinlestirildiginde uzak repoya gitmez.
 
 ## Icerik
 
