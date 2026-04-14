@@ -13,7 +13,7 @@ Template'in gerektirdigi klasor ve dosyalarin her zaman mevcut olup olmadigini d
 
 ## Gerekce
 
-- **Tek kaynak:** Manifest'te tanimlanan kurallar hem CI hem de lokal script (`validate-template.ps1`) tarafindan okunur; kural iki yerde yazilmaz.
+- **Tek kaynak:** Manifest'te tanimlanan kurallar su an lokal script (`validate-template.ps1`) tarafindan okunur; kural hardcoded olarak farkli bir yerde tekrar edilmez.
 - **Erken geri bildirim:** PR'a girmeden once `pwsh ./scripts/validate-template.ps1` ile yerel dogrulama yapilabilir.
 - **Denetlenebilirlik:** Manifest'te tanimlanmamis bir eklenti veya cikartma kolayca gordulur; review sirasinda fark edilmesi kolaydir.
 
