@@ -1,0 +1,80 @@
+required_dirs:
+  - scripts
+  - docs
+  - docs/installation
+  - demo
+  - demo/src
+  - demo/data
+  - demo/docs
+  - backups
+  - stacks
+  - stacks/node-service
+  - stacks/node-service/demo
+  - stacks/node-service/workspace
+  - stacks/python-service
+  - stacks/python-service/demo
+  - stacks/python-service/workspace
+  - stacks/nextjs-app
+  - stacks/nextjs-app/demo
+  - stacks/nextjs-app/workspace
+  - development
+  - development/guides
+  - development/checklists
+  - development/decisions
+  - development/backlogs
+
+required_files:
+  - README.md
+  - .gitignore
+  - .editorconfig
+  - TEMPLATE_VERSION
+  - TEMPLATE_CHANGELOG.md
+  - CLAUDE.md
+  - .github/template-manifest.yml
+  - .github/copilot-instructions.md
+  - .github/workflows/template-validation.yml
+  - .github/workflows/ci.yml
+  - .github/workflows/release.yml
+  - .github/workflows/submodule-sync.yml
+  - scripts/sync-to-demo.ps1
+  - scripts/validate-template.ps1
+  - scripts/verify-no-secrets-in-demo.ps1
+  - scripts/bump-template-version.ps1
+  - demo/README.md
+  - backups/latest.json
+  - docs/index.md
+  - docs/installation/index.md
+
+forbidden_globs:
+  - "**/.DS_Store"
+  - "**/Thumbs.db"
+  - "**/node_modules/**"
+  - "**/dist/**"
+  - "**/build/**"
+  - "**/.env"
+  - "**/.env.*"
+  - "**/secrets.*"
+  - "**/*.key"
+  - "**/credentials.*"
+  - "**/*.log"
+  - "**/coverage/**"
+  - "**/__pycache__/**"
+  - "**/.pytest_cache/**"
+  - "**/bin/**"
+  - "**/obj/**"
+
+demo_sync_denylist:
+  - ".env"
+  - ".env.*"
+  - "secrets.*"
+  - "*.key"
+  - "credentials.*"
+  - "*.pem"
+  - "*.p12"
+  - "*.pfx"
+  - "development/"
+  - "backups/"
+  - ".github/workflows/"
+  - "scripts/"
+  - ".claude/"
+  - "stacks/"
