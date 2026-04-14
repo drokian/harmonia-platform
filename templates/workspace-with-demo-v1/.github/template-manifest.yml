@@ -24,6 +24,7 @@ required_dirs:
   - development/guides
   - development/checklists
   - development/decisions
+  - development/scripts
   - development/backlogs
 
 # required_files: Yalnizca bu PR'da mevcut dosyalar listelenir.
