@@ -2,7 +2,7 @@
 
 Yeni bir workspace kurulumunda bu listeyi sirali sekilde tamamlayin.
 
-## Fase 0 — Onkosullar
+## Faz 0 — Onkosullar
 
 - [ ] Node.js yüklü (gerekli surum: bkz. package.json `engines.node`)
 - [ ] Git yüklü (`git --version`)
@@ -13,28 +13,28 @@ Yeni bir workspace kurulumunda bu listeyi sirali sekilde tamamlayin.
 
 - [ ] Workspace root repo olusturuldu (private)
 - [ ] Demo repo olusturuldu (public)
-- [ ] Scaffold script calıstırıldı (bkz. `how-to-sync-demo.md`)
+- [ ] Scaffold veya manuel kurulum adimlari tamamlandi
 - [ ] `development/` klasoru lokal'de mevcut ancak remote'a gitmiyor (`.gitignore` kontrolu)
 
-## Fase 2 — Submodule
+## Faz 2 — Submodule
 
 - [ ] Demo submodule eklendi (`git submodule add <demo-repo-url> demo`)
 - [ ] `.gitmodules` dogrulandi
 - [ ] `git submodule update --init --recursive` calıstırıldı
 
-## Fase 3 — CI/CD
+## Faz 3 — CI/CD
 
-- [ ] GitHub Actions workflow gecerli (`.github/workflows/` mevcut)
+- [ ] Gerekli workflow dosyalari ekliyse `.github/workflows/` yapisi dogrulandi
 - [ ] `template-manifest.yml` dogrulandi
 - [ ] `validate-template.ps1` ilk kez PASS dondurdu
 
-## Fase 4 — Guvenlik
+## Faz 4 — Guvenlik
 
 - [ ] `.env.example` olusturuldu; gercek degerler icermez
 - [ ] `verify-no-secrets-in-demo.ps1` PASS dondurdu
 - [ ] Branch koruma kurallari GitHub'da etkinlestirildi (`main`, `develop`)
 
-## Fase 5 — Dokumantasyon
+## Faz 5 — Dokumantasyon
 
 - [ ] `README.md` workspace bilgileri guncellendi
 - [ ] `docs/installation/` bolumu tamamlandi

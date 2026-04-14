@@ -9,7 +9,7 @@ Urun verisinin zamanlanmis veya manuel yedeklerinin nerede ve nasil tutulacagina
 
 ## Karar
 
-Yedekler `backups/latest.json` olarak tek bir dosyada saklanir. Bu dosya Git tarafindan takip edilir. Gecmis yedekler `demo_sync_denylist` ve `forbidden_globs` sayesinde demo'ya kopyalanmaz.
+Yedekler `backups/latest.json` olarak tek bir dosyada saklanir. Bu dosya Git tarafindan takip edilir. Gecmis yedekler demo sync sirasinda `demo_sync_denylist` ve sync script davranisi nedeniyle demo'ya kopyalanmaz.
 
 ## Gerekce
 

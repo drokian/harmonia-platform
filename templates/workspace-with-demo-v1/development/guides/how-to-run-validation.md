@@ -50,10 +50,10 @@ pwsh ./scripts/validate-template.ps1 -DryRun
 
 ## CI ile Entegrasyon
 
-`.github/workflows/template-validation.yml` her PR'da otomatik calistirir. Yerel calistirma CI'i onceden saglamak icin kullanilir.
+Bu template'te su anda `.github/workflows/template-validation.yml` hazir gelmez. Bu nedenle template dogrulamasi icin temel yol yerelde `pwsh ./scripts/validate-template.ps1` veya `powershell -ExecutionPolicy Bypass -File .\scripts\validate-template.ps1` calistirmaktir.
 
 ## Sik Karsilasilan Sorunlar
 
 **Eksik dizin hatasi manifest'e yeni dizin ekleyince:** Hem manifest `required_dirs` listesini hem de filesystem'i guncellemelisiniz. Biri eksik olursa validation fail olur.
 
-**Forbidden glob islenmis bir dosyayi buluyor:** `.gitignore` veya `demo_sync_denylist` yeterli degil; o dosyayi template kaynagindan kaldirun.
+**Forbidden glob islenmis bir dosyayi buluyor:** `.gitignore` veya `demo_sync_denylist` yeterli degil; o dosyayi template kaynagindan kaldirin.

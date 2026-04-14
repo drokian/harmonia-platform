@@ -9,7 +9,7 @@ Template'in gerektirdigi klasor ve dosyalarin her zaman mevcut olup olmadigini d
 
 ## Karar
 
-`.github/template-manifest.yml` tek kaynak olarak tanimlanan `required_dirs`, `required_files`, `forbidden_globs` ve `demo_sync_denylist` listelerini barindirir. `template-validation.yml` CI workflow'u her PR'da bu listeyi dosya sistemiyle karsilastirir.
+`.github/template-manifest.yml` tek kaynak olarak tanimlanan `required_dirs`, `required_files`, `forbidden_globs` ve `demo_sync_denylist` listelerini barindirir. Mevcut dogrulama bu listeyi lokal `validate-template.ps1` scripti araciligiyla dosya sistemiyle karsilastirir.
 
 ## Gerekce
 
@@ -27,6 +27,6 @@ Template'in gerektirdigi klasor ve dosyalarin her zaman mevcut olup olmadigini d
 
 ## Sonuclar
 
-- Manifest degisikliklerinde (dizin ekleme/cikarma) CI fail olur; PR bloklenir.
+- Manifest degisikliklerinde lokal dogrulama raporu hemen alinabilir; eksik dizin veya dosyalar hizli gorulur.
 - `demo_sync_denylist` manifest'te tanimlanir; `sync-to-demo.ps1` runtime'da bu listeyi okur.
 - `forbidden_globs` sadece template kontrolu icin; `demo_sync_denylist` sadece sync zamani icin.

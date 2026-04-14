@@ -42,7 +42,7 @@ chore(manifest): required_files listesi guncellendi
 
 ## Kurallari
 
-- Konu kisa ve emir kipinde: "Ekle", "Duzenle", "Sil" değil "eklendi", "duzeltildi" tercih edilir
+- Konu kisa olmali; "Ekle", "Duzenle", "Sil" yerine "eklendi", "duzeltildi", "guncellendi" gibi ifadeler tercih edilir
 - Konu satiri 72 karakteri gecmemeli
 - Govde neden degisiklik yapildigini aciklar, ne yapildigini degil (onu kod gosterir)
 - Breaking change: `BREAKING CHANGE:` alt bilgisi ile isaretlenir

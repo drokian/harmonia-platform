@@ -1,7 +1,7 @@
 # workspace-with-demo-v1 Backlog
 
 Bu backlog, `workspace-with-demo-v1` template'inin gelistirilmesine ait is kalemlerini izler.
-Harmonia ana backlog'undan (`development/backlogs/backlog.md`) bagimsizdur.
+Harmonia ana backlog'undan (`development/backlogs/backlog.md`) bagimsizdir.
 
 ## Aktif
 

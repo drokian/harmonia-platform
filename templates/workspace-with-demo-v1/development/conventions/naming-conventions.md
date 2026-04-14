@@ -4,7 +4,7 @@
 
 | Tip | Format | Ornek |
 |-----|--------|-------|
-| Ozellik | `feature/<kisa-aciklama>` | `feature/dark-mode` |
+| Ozellik | `feat/<kisa-aciklama>` | `feat/dark-mode` |
 | Hata duzeltme | `fix/<konu>` | `fix/login-redirect` |
 | Dokumantasyon | `docs/<alan>` | `docs/api-reference` |
 | Bakim | `chore/<konu>` | `chore/dep-update` |

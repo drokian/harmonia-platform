@@ -48,7 +48,7 @@ Manifest icindeki listeler. PR'da bu yapinin eksik olmasi CI fail'e yol acar.
 ## S
 
 **Scaffold**
-Yeni bir workspace uretmek icin template'i hedef dizine kopyalayan islem. `scripts/scaffold-demo-commercial.ps1` ile yurutulur.
+Yeni bir workspace uretmek icin template'i hedef dizine kopyalayan islem. Bu template icin bu belgede dogrulanmis ayri bir scaffold script'i tanimlanmamistir; gerekirse manuel kurulum veya ileride eklenecek ayri bir script ile yurutulur.
 
 **Sprint**
 Kisa sureli calisma donemi. `development/sprints/current.md` aktif sprint'i, `development/sprints/archive/` biten sprint'leri saklar.
@@ -73,7 +73,7 @@ Semver formatinda (`vX.Y.Z`) tek satir dosya. `TEMPLATE_CHANGELOG.md`, `README.m
 `scripts/` altindaki dogrulama scripti. Manifest'e gore workspace yapisini, forbidden_globs kurallarini ve minimum dosya varlıklarini kontrol eder.
 
 **verify-no-secrets-in-demo.ps1**
-`scripts/` altindaki guvenlik scripti. `demo/` icinde secret kaliplarini tararır; temizse exit 0, bulursa exit 1.
+`scripts/` altindaki guvenlik scripti. `demo/` icinde secret kaliplarini tarar; temizse exit 0, bulursa exit 1.
 
 **Versioning**
 Bu workspace'te Semantic Versioning (`MAJOR.MINOR.PATCH`) kullanilir. Detay icin `development/conventions/versioning-strategy.md`.
