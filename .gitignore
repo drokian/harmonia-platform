@@ -16,11 +16,14 @@ Thumbs.db
 *.log
 *.tmp
 
-# AI agent local configs (private)
-.claude/
-CLAUDE.md
-.github/copilot-instructions.md
+# AI agent local configs (private — root level only)
+/.claude/
+/CLAUDE.md
+/.github/copilot-instructions.md
 
 # Internal development process (private)
 development/
 templates/**.md
+# Template source files are exceptions — must be tracked
+!templates/workspace-with-demo-v1/
+!templates/workspace-with-demo-v1/**
