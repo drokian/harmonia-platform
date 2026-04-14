@@ -13,7 +13,7 @@
 ## Dosya ve Klasor Isimlendirme
 
 - Kucuk harf, kelimeler arasi tire: `my-feature.ts`, `api-client/`
-- Sabit degerler buyuk harf: `TEMPLATE_VERSION`, `CHANGELOG.md`
+- Sabit degerler buyuk harf: `TEMPLATE_VERSION`, `TEMPLATE_CHANGELOG.md`
 - Gizli dosyalar nokta ile baslar: `.env.example`, `.gitignore`
 - Konfigurasyon dosyalari onceki kurali izler; framework standardi onceliklidir
 

@@ -9,7 +9,6 @@ Harmonia ana backlog'undan (`development/backlogs/backlog.md`) bagimsizdir.
 |----|--------|---------|-------|
 | WD-001 | Iskelet + manifest + README + temel CI | P0 | Tamamlandi |
 | WD-002 | scripts/ dizinine 4 PowerShell scripti | P0 | Tamamlandi |
-| WD-003 | development/ katmani (ADR, konvansiyonlar, rehberler) | P0 | Devam ediyor |
 | WD-004 | Asamali kurulum rehberi (6 asama) | P1 | Bekliyor |
 | WD-005 | Harmonia katalog guncellemesi | P1 | Bekliyor |
 
@@ -17,6 +16,7 @@ Harmonia ana backlog'undan (`development/backlogs/backlog.md`) bagimsizdir.
 
 - WD-001: Iskelet, manifest, temel CI, README, TEMPLATE_VERSION
 - WD-002: validate-template, sync-to-demo, bump-template-version, verify-no-secrets scriptleri
+- WD-003: development katmani (ADR, konvansiyonlar, rehberler, checklist, sozluk)
 
 ## Notlar
 

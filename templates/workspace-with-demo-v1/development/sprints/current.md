@@ -1,6 +1,6 @@
 # Aktif Sprint
 
-> Son guncelleme: 2026-04-14
+> Son guncelleme: YYYY-MM-DD
 
 ## Bu Sprint
 

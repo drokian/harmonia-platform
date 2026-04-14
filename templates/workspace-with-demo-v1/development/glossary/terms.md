@@ -28,7 +28,7 @@ Demo'ya kopyalanmasi yasak dosya/klasor kaliplari. `template-manifest.yml` icind
 ## F
 
 **forbidden_globs**
-Workspace icinde bulunmasi kabul edilemez dosya kaliplari (ornek: `.env`). `template-manifest.yml` `forbidden_globs` listesinde tanimlanir; CI bozulur.
+Workspace icinde bulunmasi kabul edilemez dosya kaliplari (ornek: `.env`). `template-manifest.yml` `forbidden_globs` listesinde tanimlanir; yerel `validate-template.ps1` kontrolu bu eslesmelerde hata verir.
 
 ## G
 
@@ -38,12 +38,12 @@ Bu dosya. Terimleri tanimlayan referans dokumani.
 ## M
 
 **Manifest**
-`.github/template-manifest.yml` dosyasi. `required_dirs`, `required_files`, `forbidden_globs` ve `demo_sync_denylist` listelerini icerir. CI tarafindan dogrulanir (tek kaynak).
+`.github/template-manifest.yml` dosyasi. `required_dirs`, `required_files`, `forbidden_globs` ve `demo_sync_denylist` listelerini icerir. Bu template'te dogrulama yerelde `validate-template.ps1` ile yapilir (tek kaynak).
 
 ## R
 
 **required_dirs** / **required_files**
-Manifest icindeki listeler. PR'da bu yapinin eksik olmasi CI fail'e yol acar.
+Manifest icindeki listeler. Bu yapida eksik/uyumsuz bir durum oldugunda `validate-template.ps1` kontrolu fail verir.
 
 ## S
 

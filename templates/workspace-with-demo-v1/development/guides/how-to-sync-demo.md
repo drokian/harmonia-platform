@@ -6,7 +6,7 @@
 
 Bu rehberi kullanmadan once:
 - `demo/` submodule'u klonlu ve guncel olmali (`git submodule update --init`)
-- Workspace koku temiz olmali (commit edilmemis degisiklik olabilir, sorun degil)
+- Workspace kokunde calisabilirsiniz; commit edilmemis degisiklikler sorun degil, ancak degisikliklerin karismamasi icin temiz bir working tree onerilir
 
 ## Temel Kullanim
 

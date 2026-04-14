@@ -33,6 +33,6 @@ workspace/ (private)
 
 ## Sonuclar
 
-- Scaffold asamasi 2 ve 3 bu adimi tanimlar (docs/installation/phase-2 ve phase-3).
+- Bu adim, kurulum surecinin ilerleyen asamalarinda uygulanir; template icinde su an bu asamalar icin ayri `docs/installation/phase-2` veya `phase-3` dokumanlari bulunmaz.
 - `sync-to-demo.ps1` workspace'ten demo'ya **denetimli** kopyalama yapar.
 - Demo klasoru template kaynaginda statik placeholder olarak durur; scaffold sirasinda submodule'e donusturulur.

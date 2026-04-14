@@ -15,7 +15,7 @@ Yedekler `backups/latest.json` olarak tek bir dosyada saklanir. Bu dosya Git tar
 
 - **Basitlik:** Tek dosya modeli, yedek sayisinin birikmesini ve depoya sismesini onler.
 - **Takip edilebilirlik:** `latest.json` commit gecmisinde gorunur; kim, ne zaman yedek aldi izlenebilir.
-- **Demo koruması:** `backups/**` demo_sync_denylist'te oldugu icin yedek verisi publice sizan demo'ya gecmez; `backups/README.md` istisnadir.
+- **Demo koruması:** `backups/` yolu demo sync sirasinda denylist ve sync script kontrolleri nedeniyle demo'ya kopyalanmaz.
 
 ## Sinirlar ve Dikkat Edilecekler
 
@@ -25,6 +25,5 @@ Yedekler `backups/latest.json` olarak tek bir dosyada saklanir. Bu dosya Git tar
 
 ## Sonuclar
 
-- `backups/latest.json` manifest `required_files`'ta; dosyanin varligini CI dogrular.
-- `backups/README.md` yedek dosya formatini ve kullanim notlarini aciklar.
-- `backups/**` izleme kurali: `!backups/README.md` ve `!backups/latest.json` disindakiler denylist'te.
+- `backups/latest.json` manifest `required_files` listesinde tanimlidir; dosyanin varligi yerel `validate-template.ps1` ile dogrulanir.
+- `backups/` altindaki icerik demo sync sirasinda denylist kontrolunden gecemez ve demo'ya aktarilmaz.

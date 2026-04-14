@@ -37,7 +37,7 @@ pwsh ./scripts/bump-template-version.ps1 -Bump minor
 
 ### Eklendi
 
-- Asamali kurulum rehberi (docs/installation/phase-*.md)
+- Kurulum rehberi guncellendi (docs/installation/index.md)
 - Development katmani: ADR'lar, konvansiyonlar, rehberler
 ```
 
@@ -74,4 +74,4 @@ git push origin develop
 
 **`TEMPLATE_VERSION` ve README baseline uyusmuyor:** `bump-template-version.ps1` her ikisini de birlikte gunceller; elle duzenleme yerine script kullanin.
 
-**Changelog TODO kaldi:** PR'da CI bunu yakalar; TODO satirini gercek ozet ile degistirin.
+**Changelog TODO kaldi:** Release oncesi manuel kontrolde veya review sirasinda bu durum yakalanir; TODO satirini gercek ozet ile degistirin.

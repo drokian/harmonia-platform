@@ -9,7 +9,6 @@ workspace/
 │   └── workflows/
 ├── .claude/                  # Claude Code talimatlari
 ├── backups/                  # Yedek dosyalari (gitlenir, demo'ya gitmez)
-│   ├── README.md
 │   └── latest.json
 ├── demo/                     # Public demo submodule (git submodule)
 ├── development/              # Ozel surec notlari (.gitignore'da)
@@ -46,7 +45,7 @@ Template kaynaginda statik placeholder. Scaffold sirasinda public repo'ya donusu
 Scaffold edilen hedef workspace'te `.gitignore` kuralina dahil edilmesi beklenir. Template kaynaginda ise referans dokumani olarak gitlenir; bu fark kasitlidir.
 
 ### `docs/`
-MkDocs Material ile host edilen kullanici dokumantasyonu. `docs/installation/` 6 asamali kurulum rehberini icerir.
+MkDocs Material ile host edilen kullanici dokumantasyonu. `docs/installation/` kurulum dokumani icin ayrilan klasordur; asamali rehber dosyalari ihtiyaca gore eklenir.
 
 ### `scripts/`
 Guvenlik ve ops scriptleri kok seviyededir; `development/scripts/` degil. Kullanicilar kolayca bulur.

@@ -4,12 +4,12 @@ Yeni bir workspace kurulumunda bu listeyi sirali sekilde tamamlayin.
 
 ## Faz 0 — Onkosullar
 
-- [ ] Node.js yüklü (gerekli surum: bkz. package.json `engines.node`)
+- [ ] Node.js yüklü (gerekli surum: secilen stack'in `stacks/*/workspace/package.json` dosyasindaki `engines.node` alanindan dogrulanir)
 - [ ] Git yüklü (`git --version`)
 - [ ] PowerShell 5.1+ veya pwsh 7+ mevcut
 - [ ] GitHub hesabi ve erişim tokeni hazir
 
-## Fase 1 — Repo Kurulumu
+## Faz 1 — Repo Kurulumu
 
 - [ ] Workspace root repo olusturuldu (private)
 - [ ] Demo repo olusturuldu (public)

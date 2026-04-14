@@ -20,7 +20,7 @@ Bir versiyon surumu yapmadan once bu listedeki her maddeyi tamamlayin.
 
 - [ ] `sync-to-demo.ps1 -DryRun` ile hangi dosyalarin gidecegi onaylandi
 - [ ] Demo guncellendi ve test edildi
-- [ ] Demo deployment dogrulanan URL'den erisibiliyor
+- [ ] Demo deployment dogrulanan URL'den erisilebiliyor
 
 ## Git
 
@@ -31,5 +31,5 @@ Bir versiyon surumu yapmadan once bu listedeki her maddeyi tamamlayin.
 ## Son Kontrol
 
 - [ ] PR acildi ve en az bir onay alindi
-- [ ] CI workflow yesil
+- [ ] CI varsa workflow yesil; CI yoksa `pwsh ./scripts/validate-template.ps1` ve `pwsh ./scripts/verify-no-secrets-in-demo.ps1` PASS
 - [ ] `main`'e merge edildi ve `vX.Y.Z` etiketi atildi
