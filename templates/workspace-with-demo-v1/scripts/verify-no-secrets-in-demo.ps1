@@ -11,12 +11,14 @@ function Write-Hit  { param([string]$Msg) Write-Host "[secret-scan] HIT  $Msg" -
 function Write-Ok   { param([string]$Msg) Write-Host "[secret-scan] OK   $Msg" -ForegroundColor Green }
 
 if ($DemoPath -eq "") {
-  $DemoPath = Resolve-Path (Join-Path $PSScriptRoot "../demo")
+  $DemoPath = Join-Path $PSScriptRoot "../demo"
 }
 
 if (-not (Test-Path -LiteralPath $DemoPath -PathType Container)) {
   throw "demo/ dizini bulunamadi: $DemoPath"
 }
+
+$DemoPath = (Resolve-Path -LiteralPath $DemoPath).Path
 
 Write-Step "Tarama dizini: $DemoPath"
 if ($DryRun) { Write-Step "(DryRun - sadece rapor)" }

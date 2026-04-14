@@ -58,7 +58,8 @@ function Get-ManifestList {
 $manifestLines = Get-Content -Path $ManifestPath
 $denylist = Get-ManifestList -Lines $manifestLines -Section "demo_sync_denylist"
 
-# Secret pattern'lari (verify-no-secrets-in-demo.ps1 ile ayni set)
+# Secret pattern'lari (sync icin temel set).
+# Not: .env value pattern burada yok; .env* dosyalari demo_sync_denylist ile engellenir.
 $secretPatterns = @(
   "AKIA[0-9A-Z]{16}",
   "ghp_[A-Za-z0-9]{36}",
