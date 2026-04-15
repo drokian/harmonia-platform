@@ -13,6 +13,6 @@ Bu bolum, workspace-with-demo-v1 template'i icin asamali kurulum rehberini iceri
 
 ## Notlar
 
-- Her asama idempotent calisacak sekilde hazirlandi.
+- Asamalar, mumkun oldugunca guvenli ve tekrar calistirilabilir sekilde kurgulandi; ancak bazi adimlarda mevcut ortama gore ek kontrol veya manuel mudahale gerekebilir.
 - Bir asamada takilirsan ilgili dosyanin "Sorun mu Yasiyorsun?" bolumune bak.
 - Script adimlarini calistirmadan once her zaman ilgili asamanin "Onkosul Kontrolu" bolumunu tamamla.

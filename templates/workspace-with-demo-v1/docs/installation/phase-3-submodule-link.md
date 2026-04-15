@@ -29,7 +29,9 @@ git push origin main
 
 ```powershell
 Set-Location my-product
-Remove-Item .\demo -Recurse -Force
+if (Test-Path .\demo) {
+	Remove-Item .\demo -Recurse -Force
+}
 git submodule add git@github.com:<org>/my-product-demo.git demo
 git add .gitmodules demo
 git commit -m "chore(workspace): link demo repository as submodule"

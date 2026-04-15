@@ -30,15 +30,15 @@ ssh -T git@github.com
 ```
 
 Beklenen sonuc:
-- `pwsh` surumu 7+ olmali.
-- `git` surumu 2.40+ olmali.
+- `pwsh` surumu 7+ olmasi onerilir.
+- `git` surumu 2.40+ olmasi onerilir.
 - `gh` komutu opsiyoneldir, ama PR akisinda hiz kazandirir.
 - SSH testi sonunda basarili kimlik dogrulama mesaji gorulmeli.
 
 ## Bu Asama Bittiginde
 
-- [ ] PowerShell 7+ kurulu ve calisiyor.
-- [ ] Git 2.40+ kurulu ve calisiyor.
+- [ ] PowerShell kurulu ve calisiyor (tercihen 7+).
+- [ ] Git kurulu ve calisiyor (tercihen 2.40+).
 - [ ] GitHub erisimi (SSH veya PAT) dogrulandi.
 - [ ] Workspace private, demo public repo stratejisi net.
 

@@ -6,7 +6,8 @@ Bu asama, public demo reposunu hazirlar ve ilk baseline icerigi publish eder.
 
 Bu asamadan baslamalisin eger:
 - Asama 1 tamamlandiysa.
-- Public demo repo henuz olusturulmadiysa.
+- Public demo repo GitHub uzerinde olusturulduysa.
+- Public demo repo henuz yerelde klonlanmadiysa.
 - Demo icerigini ayri bir public repoda tutmak istiyorsan.
 
 ## Adim-adim Komutlar

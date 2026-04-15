@@ -5,7 +5,7 @@ Bu asama, demo submodule'unun bagli oldugu public repoda ilk yayinlamayi (GitHub
 ## Onkosul Kontrolu
 
 Bu asamadan baslamalisin eger:
-- Asama 4 dogrulama adimlari PASS ise.
+- Asama 4 dogrulama scriptleri exit code 0 ile tamamlandiysa.
 - Demo repo public ve erisilebilir durumdaysa.
 - Demo iceriginde yayinlanabilir statik dosyalar mevcutsa.
 
@@ -17,7 +17,7 @@ Bu asamadan baslamalisin eger:
 cd my-product/demo
 git status
 git add .
-git commit -m "chore(demo): first deploy baseline"
+if ! git diff --cached --quiet; then git commit -m "chore(demo): first deploy baseline"; else echo "No changes to commit"; fi
 git push origin main
 ```
 
@@ -27,7 +27,11 @@ git push origin main
 Set-Location my-product/demo
 git status
 git add .
-git commit -m "chore(demo): first deploy baseline"
+if (-not (git diff --cached --quiet; $LASTEXITCODE -eq 0)) {
+	git commit -m "chore(demo): first deploy baseline"
+} else {
+	Write-Host "No changes to commit"
+}
 git push origin main
 ```
 
@@ -44,7 +48,7 @@ Workspace tarafinda iz kaydi (opsiyonel):
 ```bash
 cd ..
 git add demo
-git commit -m "chore(workspace): first demo deploy live"
+if ! git diff --cached --quiet; then git commit -m "chore(workspace): first demo deploy live"; else echo "No changes to commit"; fi
 git push origin main
 ```
 
@@ -53,7 +57,11 @@ git push origin main
 ```powershell
 Set-Location ..
 git add demo
-git commit -m "chore(workspace): first demo deploy live"
+if (-not (git diff --cached --quiet; $LASTEXITCODE -eq 0)) {
+	git commit -m "chore(workspace): first demo deploy live"
+} else {
+	Write-Host "No changes to commit"
+}
 git push origin main
 ```
 

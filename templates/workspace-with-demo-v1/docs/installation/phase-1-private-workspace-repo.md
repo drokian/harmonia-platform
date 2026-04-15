@@ -6,7 +6,8 @@ Bu asama, ana private workspace reposunun olusturulmasini ve template iceriginin
 
 Bu asamadan baslamalisin eger:
 - Asama 0 tamamlandiysa.
-- Private workspace repo henuz olusturulmadiysa.
+- Private workspace repo GitHub uzerinde olusturulduysa.
+- Private workspace repo henuz yerelde klonlanmadiysa.
 - Elinde bos veya yeni olusturulmus bir workspace klasoru varsa.
 
 ## Adim-adim Komutlar

@@ -43,10 +43,9 @@ git grep -nE "(AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|sk-[A-Za-z0-9]{20,})" demo
 
 ## Bu Asama Bittiginde
 
-- [ ] `validate-template.ps1` PASS dondu.
-- [ ] `verify-no-secrets-in-demo.ps1` PASS dondu.
+- [ ] `validate-template.ps1` exit code 0 ile tamamlandi.
+- [ ] `verify-no-secrets-in-demo.ps1` exit code 0 ile tamamlandi.
 - [ ] Demo klasorunde bilinen secret pattern'i bulunmadi.
-- [ ] Gerekirse rapor dosyasi `development/reports/` altinda olustu.
 
 ## Sorun mu Yasiyorsun?
 
