@@ -51,6 +51,12 @@ required_files:
   - backups/latest.json
   - docs/index.md
   - docs/installation/index.md
+  - docs/installation/phase-0-prerequisites.md
+  - docs/installation/phase-1-private-workspace-repo.md
+  - docs/installation/phase-2-public-demo-repo.md
+  - docs/installation/phase-3-submodule-link.md
+  - docs/installation/phase-4-security-validation.md
+  - docs/installation/phase-5-first-deploy.md
 
 forbidden_globs:
   - "**/.DS_Store"
