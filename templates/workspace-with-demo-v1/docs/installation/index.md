@@ -1,25 +1,18 @@
 # Kurulum
 
-Bu bolum workspace kurulum adimlarini icerir.
+Bu bolum, workspace-with-demo-v1 template'i icin asamali kurulum rehberini icerir.
 
-## Onkosullar
+## Akis
 
-- Git
-- PowerShell 7+ (`pwsh`)
-- GitHub CLI (`gh`) — opsiyonel, PR olusturmak icin
+1. [Asama 0 - Onkosullar](phase-0-prerequisites.md)
+2. [Asama 1 - Private Workspace Repo](phase-1-private-workspace-repo.md)
+3. [Asama 2 - Public Demo Repo](phase-2-public-demo-repo.md)
+4. [Asama 3 - Submodule Bagi](phase-3-submodule-link.md)
+5. [Asama 4 - Guvenlik Dogrulamasi](phase-4-security-validation.md)
+6. [Asama 5 - Ilk Deploy](phase-5-first-deploy.md)
 
-## Adimlar
+## Notlar
 
-1. Harmonia scaffold scripti ile yeni workspace olusturun (script WD-005 PR'inda eklenecektir).
-2. Scaffold, `demo/` placeholder dosyalarini otomatik temizler; ardindan demo submodule'u ekleyin:
-   ```bash
-   git submodule add https://github.com/<org>/<repo>-demo demo
-   ```
-3. Projenin ihtiyac duydugu degiskenlerle `.env` dosyasini olusturun.
-4. Template yapisini dogrulayin (script WD-002 PR'inda eklenecektir):
-   ```powershell
-   pwsh ./scripts/validate-template.ps1
-   ```
-
-> **Not:** `scripts/validate-template.ps1` ve diger operasyon scriptleri WD-002 PR'inda,
-> CI workflow dosyalari ise WD-003 PR'inda tamamlanacaktir.
+- Asamalar, mumkun oldugunca guvenli ve tekrar calistirilabilir sekilde kurgulandi; ancak bazi adimlarda mevcut ortama gore ek kontrol veya manuel mudahale gerekebilir.
+- Bir asamada takilirsan ilgili dosyanin "Sorun mu Yasiyorsun?" bolumune bak.
+- Script adimlarini calistirmadan once her zaman ilgili asamanin "Onkosul Kontrolu" bolumunu tamamla.
