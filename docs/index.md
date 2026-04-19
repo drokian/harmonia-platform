@@ -16,7 +16,7 @@ flowchart LR
 
     subgraph catalog["📚 Template Kataloğu"]
         T1["📦 demo-commercial-template\nv1.0.0"]
-        T2["📦 ...\n(ileride)"]
+        T2["📦 workspace-with-demo\nv1.0.0"]
     end
 
     S["⚡ Scaffold"]
@@ -106,6 +106,7 @@ Adım adım kurulum için [Başlarken → Workspace Oluşturma](getting-started/
 | Template | Versiyon | Ne Çözer |
 |----------|----------|----------|
 | demo-commercial-template | `v1.0.0` | Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme |
+| workspace-with-demo | `v1.0.0` | Private workspace + public demo submodule; güvenli, filtrelenmis halka açık surum |
 
 ---
 

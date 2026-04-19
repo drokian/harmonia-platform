@@ -96,6 +96,8 @@ nav:
   - Başlarken:
       - Workspace Oluşturma: getting-started/scaffold.md
       - İlk Template: getting-started/first-template.md
+  - Templates:
+      - workspace-with-demo: templates/workspace-with-demo.md
 
 extra:
   social:
