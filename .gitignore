@@ -16,6 +16,9 @@ Thumbs.db
 *.log
 *.tmp
 
+# Review artefacts (script çıktıları — local only)
+/ai-review/
+
 # AI agent local configs (private — root level only)
 /.claude/
 /CLAUDE.md
