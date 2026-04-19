@@ -24,6 +24,7 @@ flowchart LR
 
     H --> catalog
     T1 -->|"seçilir"| S
+    T2 -->|"seçilir"| S
     S -->|"üretir"| W
 ```
 
@@ -106,7 +107,7 @@ Adım adım kurulum için [Başlarken → Workspace Oluşturma](getting-started/
 | Template | Versiyon | Ne Çözer |
 |----------|----------|----------|
 | demo-commercial-template | `v1.0.0` | Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme |
-| workspace-with-demo | `v1.0.0` | Private workspace + public demo submodule; güvenli, filtrelenmis halka açık surum |
+| workspace-with-demo | `v1.0.0` | Private workspace + public demo submodule; güvenli, filtrelenmiş halka açık sürüm |
 
 ---
 

@@ -30,8 +30,10 @@ Harmonia, güvenlik-ilk bir yaklaşımla sunar:
   workflows/                → CI workflow'ları
 CLAUDE.md                   → Claude Code stub
 scripts/                    → Operasyon scriptleri
-  sync-to-demo.ps1          → Manifest forbidden_globs'u okur, güvenli kopyala
-  cleanup.ps1               → Eski backup/log'ları temizle
+  sync-to-demo.ps1          → Manifest `demo_sync_denylist`'ini okur, güvenli kopyala
+  validate-template.ps1     → Manifest forbidden_globs, required_dirs, required_files doğrulaması
+  verify-no-secrets-in-demo.ps1 → Demo içinde secret/API key izi tarar
+  bump-template-version.ps1 → Template baseline/version bilgisini günceller
 demo/                       → public demo (git submodule)
   index.html                → Minimal başlangıç iskeleti
   styles.css
@@ -58,7 +60,7 @@ development/                → özel süreç notları, backlog, kararlar
 
 1. **Git katmanı:** `.gitignore` — `.env`, `secrets.*`, `*.key`, `credentials.*` hiç izlenmez.
 2. **Script katmanı:** `scripts/sync-to-demo.ps1` — manifest `demo_sync_denylist`'i okur, eşleşen dosyaları atlar; API key regex taraması yapar.
-3. **Manifest katmanı:** `.github/template-manifest.yml` `forbidden_globs` — CI her PR'da tarar.
+3. **Manifest katmanı:** `.github/template-manifest.yml` `forbidden_globs` — `scripts/validate-template.ps1` ile lokal doğrulanır.
 
 ## Kullanım
 
@@ -66,12 +68,12 @@ Aşama aşama kurulum rehberi için [Başlarken → workspace-with-demo](../gett
 
 Veya doğrudan installation fase rehberlerine bakın:
 
-- [Fase 0: Gereksinimler](./docs/installation/phase-0-prerequisites.md)
-- [Fase 1: Private Workspace Repo](./docs/installation/phase-1-private-workspace-repo.md)
-- [Fase 2: Public Demo Repo](./docs/installation/phase-2-public-demo-repo.md)
-- [Fase 3: Submodule Bağlantısı](./docs/installation/phase-3-submodule-link.md)
-- [Fase 4: Güvenlik Doğrulaması](./docs/installation/phase-4-security-validation.md)
-- [Fase 5: İlk Deploy](./docs/installation/phase-5-first-deploy.md)
+- [Fase 0: Gereksinimler](../installation/phase-0-prerequisites.md)
+- [Fase 1: Private Workspace Repo](../installation/phase-1-private-workspace-repo.md)
+- [Fase 2: Public Demo Repo](../installation/phase-2-public-demo-repo.md)
+- [Fase 3: Submodule Bağlantısı](../installation/phase-3-submodule-link.md)
+- [Fase 4: Güvenlik Doğrulaması](../installation/phase-4-security-validation.md)
+- [Fase 5: İlk Deploy](../installation/phase-5-first-deploy.md)
 
 ## Geliştirilme Durumu
 
@@ -79,12 +81,12 @@ Template kademeli olarak tamamlanmaktadır:
 
 - **WD-001** (✓ tamamlandı): Manifest, iskelet, temel konfigürasyon
 - **WD-002** (✓ tamamlandı): `scripts/` içerisindeki PowerShell scriptleri
-- **WD-003** (✓ tamamlandı): `.github/workflows/` CI dosyaları
+- **WD-003** (⏳ devam ediyor): `.github/workflows/` CI dosyaları — klasör mevcut, workflow'lar eklenecek
 - **WD-004** (✓ tamamlandı): Demo submodule yapısı + stacks overlay'leri
 - **WD-005** (✓ tamamlandı): Development + MkDocs dokümantasyonu
 
 ## İlgili Kaynaklar
 
-- [Template Tasarım Planı](../../development/plans/workspace-with-demo-v1-plan.md)
-- [Harmonia — Template Adlandırma Konvansiyonu](../../development/conventions/template-naming.md)
-- [Manifest Şeması](../../templates/workspace-with-demo-v1/.github/template-manifest.yml)
+- **Template Tasarım Planı** — `development/plans/workspace-with-demo-v1-plan.md`
+- **Harmonia — Template Adlandırma Konvansiyonu** — `development/conventions/template-naming.md`
+- **Manifest Şeması** — `templates/workspace-with-demo-v1/.github/template-manifest.yml`
