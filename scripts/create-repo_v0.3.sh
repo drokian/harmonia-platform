@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# create-repo.sh
+# create-repo_v0.3.sh
 # ==============================================================================
 # HARMONIA REPO BOOTSTRAP ENGINE
 # ==============================================================================
@@ -85,7 +85,7 @@ RESET="\033[0m"
 
 show_help() {
     echo -e "${BOLD}${CYAN}Kullanım:${RESET}"
-    echo -e "  ${YELLOW}./create-repo.sh [--dry-run] <hesap> <repo-adi> <public|private>${RESET}"
+    echo -e "  ${YELLOW}./scripts/create-repo_v0.3.sh [--dry-run] <hesap> <repo-adi> <public|private>${RESET}"
     echo
 
     echo -e "${BOLD}${CYAN}Açıklama:${RESET}"
@@ -109,8 +109,8 @@ show_help() {
     echo
 
     echo -e "${BOLD}${CYAN}Ornek:${RESET}"
-    echo -e "  ${GREEN}./create-repo.sh docyazilim doc-notes private${RESET}"
-    echo -e "  ${GREEN}./create-repo.sh --dry-run docyazilim doc-notes private${RESET}"
+    echo -e "  ${GREEN}./scripts/create-repo_v0.3.sh docyazilim doc-notes private${RESET}"
+    echo -e "  ${GREEN}./scripts/create-repo_v0.3.sh --dry-run docyazilim doc-notes private${RESET}"
     echo
 }
 
@@ -213,7 +213,7 @@ confirm_initial_commit() {
     fi
 }
 
-# [FIX v1.3] guard_sensitive_paths: find tabanlı tarama .gitignore'u görmezden
+# [FIX v0.3] guard_sensitive_paths: find tabanlı tarama .gitignore'u görmezden
 # geldiğinden false positive üretiyordu. Yeni yaklaşım:
 #   1. git ls-files --others --exclude-standard   → untracked ama .gitignore'suz dosyalar
 #   2. git diff --cached --name-only              → zaten staged olan dosyalar
@@ -258,7 +258,7 @@ if ! gh auth status >/dev/null 2>&1; then
 fi
 log_success "GitHub CLI oturumu doğrulandı"
 
-# [FIX v1.3] HAS_GIT_REPO flag'i kaldırıldı. Önceki tasarımda dry-run'da
+# [FIX v0.3] HAS_GIT_REPO flag'i kaldırıldı. Önceki tasarımda dry-run'da
 # HAS_GIT_REPO=false set edilip else bloğuna giriliyordu; bu blok DRY_RUN
 # kontrolü yapmadığından normal modda git repo yokken ensure_main_branch
 # atlanabilirdi. Yeni tasarım: ensure_main_branch her zaman dry() üzerinden
@@ -291,7 +291,7 @@ if git remote get-url origin >/dev/null 2>&1; then
     exit 1
 fi
 
-# [FIX v1.3] gh repo create çıktısı doğrudan tee'ye pipe edildiğinde
+# [FIX v0.3] gh repo create çıktısı doğrudan tee'ye pipe edildiğinde
 # set -euo pipefail altında gh hata verse bile tee başarılı döndüğünden
 # hata sessizce yutuluyordu. Yeni yaklaşım: stdout+stderr önce log dosyasına
 # tee ile yazılır, ardından PIPESTATUS[0] ile gh'nin exit code'u kontrol edilir.
@@ -312,7 +312,7 @@ else
 fi
 log_success "Repo oluşturuldu ve main push edildi"
 
-# [FIX v1.3] develop branch işlemleri tamamlandıktan sonra main'e geri dönülüyor.
+# [FIX v0.3] develop branch işlemleri tamamlandıktan sonra main'e geri dönülüyor.
 # Önceki tasarımda script develop üzerinde kalıyordu; sonraki adımlarda yanlış
 # branch bağlamında işlem yapma riski vardı.
 if git show-ref --verify --quiet refs/heads/develop; then

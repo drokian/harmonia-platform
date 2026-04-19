@@ -242,7 +242,7 @@ EOF
 
     local page_threads
     page_threads=$(echo "$response" | jq '.data.repository.pullRequest.reviewThreads.nodes // []')
-    all_threads=$(jq -s '.[0] + .[1]' <(echo "$all_threads") <(echo "$page_threads"))
+    all_threads=$(printf "%s\n%s\n" "$all_threads" "$page_threads" | jq -s '.[0] + .[1]')
 
     has_next=$(echo "$response" | jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.hasNextPage // false')
     cursor=$(echo "$response" | jq -r '.data.repository.pullRequest.reviewThreads.pageInfo.endCursor // ""')

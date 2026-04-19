@@ -119,6 +119,28 @@ COPILOT_REVIEWS_LOGIN="${COPILOT_REVIEWS_LOGIN:-copilot-pull-request-reviewer[bo
 # REST: comments + reviews
 log_info "REST API: comments + reviews alınıyor..."
 
+gql_query_or_fail() {
+  local query="$1"
+  local context="$2"
+  local resp
+
+  if ! resp=$(gh api graphql -f query="$query" 2>&1); then
+    log_error "GraphQL çağrısı başarısız oldu: ${context}"
+    echo "$resp" | sed 's/^/[ERROR]   /' || true
+    exit 1
+  fi
+
+  local gql_errors
+  gql_errors=$(echo "$resp" | jq '.errors // [] | length' 2>/dev/null || echo 0)
+  if [[ "$gql_errors" -gt 0 ]]; then
+    log_error "GraphQL hata döndürdü: ${context}"
+    echo "$resp" | jq -r '.errors[]?.message' | sed 's/^/[ERROR]   /' || true
+    exit 1
+  fi
+
+  echo "$resp"
+}
+
 fetch_all_pages() {
   local endpoint="$1"
   local all="[]"
@@ -190,11 +212,11 @@ EOF
 )
 
     local resp
-    resp=$(gh api graphql -f query="$query" 2>/dev/null || echo '{}')
+    resp=$(gql_query_or_fail "$query" "thread yorumları (thread_id=${thread_id})")
 
     local page_nodes
     page_nodes=$(echo "$resp" | jq '.data.node.comments.nodes // []')
-    comments_acc=$(jq -s '.[0] + .[1]' <(echo "$comments_acc") <(echo "$page_nodes"))
+    comments_acc=$(printf "%s\n%s\n" "$comments_acc" "$page_nodes" | jq -s '.[0] + .[1]')
 
     has_next=$(echo "$resp" | jq -r '.data.node.comments.pageInfo.hasNextPage // false')
     cursor=$(echo "$resp" | jq -r '.data.node.comments.pageInfo.endCursor // ""')
@@ -250,7 +272,14 @@ EOF
 )
 
     local resp
-    resp=$(gh api graphql -f query="$query" 2>/dev/null || echo '{}')
+    resp=$(gql_query_or_fail "$query" "review thread listesi")
+
+    local pr_exists
+    pr_exists=$(echo "$resp" | jq '.data.repository.pullRequest != null')
+    if [[ "$pr_exists" != "true" ]]; then
+      log_error "Pull Request bulunamadı veya erişilemiyor (owner/repo/pr_number kontrol edin)."
+      exit 1
+    fi
 
     local page_threads
     page_threads=$(echo "$resp" | jq '.data.repository.pullRequest.reviewThreads.nodes // []')
@@ -275,7 +304,7 @@ EOF
         if [[ "$comments_has_next" == "true" ]]; then
           local more_comments
           more_comments=$(fetch_thread_comments_pages "$thread_id" "$comments_cursor")
-          thread_comments=$(jq -s '.[0] + .[1]' <(echo "$thread_comments") <(echo "$more_comments"))
+          thread_comments=$(printf "%s\n%s\n" "$thread_comments" "$more_comments" | jq -s '.[0] + .[1]')
         fi
 
         local normalized_thread
@@ -285,7 +314,7 @@ EOF
           --argjson comments "$thread_comments" \
           '{id: $id, isResolved: $resolved, comments: {nodes: $comments}}')
 
-        threads_acc=$(jq -s '.[0] + [.[1]]' <(echo "$threads_acc") <(echo "$normalized_thread"))
+        threads_acc=$(printf "%s\n%s\n" "$threads_acc" "$normalized_thread" | jq -s '.[0] + [.[1]]')
       done
     fi
 

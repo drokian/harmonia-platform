@@ -1,6 +1,6 @@
 # Harmonia Scripts - Kullanim Dokumantasyonu
 
-Bu dokuman, `development/scripts` altindaki operasyon scriptlerinin amacini,
+Bu dokuman, `scripts` altindaki operasyon scriptlerinin amacini,
 parametrelerini ve ornek kullanimlarini tek yerde toplar.
 
 ## Icindekiler
@@ -36,7 +36,7 @@ Not: Windows ortaminda WSL/bash veya Git Bash kullanilmasi onerilir.
 
 Amac:
 - PR uzerindeki review comment, review event ve review thread verilerini toplar.
-- Ciktilari `development/ai-review/<repo>/PR<numara>/` altina yazar.
+- Ciktilari `ai-review/<repo>/PR<numara>/` altina yazar.
 
 Parametreler:
 
@@ -131,7 +131,7 @@ Ciktilar:
 ## 4) cleanup_v0.2.sh
 
 Amac:
-- Belirli bir repo + PR icin `development/ai-review/<repo>/PR<numara>` klasorunu temizler.
+- Belirli bir repo + PR icin `ai-review/<repo>/PR<numara>` klasorunu temizler.
 
 Parametreler:
 

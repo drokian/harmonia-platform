@@ -316,9 +316,11 @@ declare -A COMMENT_TO_THREAD
 THREAD_COUNT=$(jq 'length' "$THREADS_JSON")
 for ((i=0; i<THREAD_COUNT; i++)); do
   THREAD_ID=$(jq -r ".[$i].id" "$THREADS_JSON")
+  THREAD_ID="${THREAD_ID//$'\r'/}"
   COMMENT_COUNT=$(jq ".[$i].comments.nodes | length" "$THREADS_JSON")
   for ((j=0; j<COMMENT_COUNT; j++)); do
     CID_NODE=$(jq -r ".[$i].comments.nodes[$j].id" "$THREADS_JSON")
+    CID_NODE="${CID_NODE//$'\r'/}"
     COMMENT_TO_THREAD["$CID_NODE"]="$THREAD_ID"
   done
 done
@@ -332,21 +334,22 @@ get_reply_for_comment() {
   local comment_body="$1"
 
   if [[ "$MODE" == "map" ]]; then
-    MATCHES=$(jq -r --arg body "$comment_body" '
-      .[] | select(.pattern as $p | $body | test($p)) | .reply
+    local count
+    count=$(jq -r --arg body "$comment_body" '
+      [.[] | select(.pattern as $p | $body | test($p))] | length
     ' "$MAP_FILE")
 
-    COUNT=$(printf "%s" "$MATCHES" | grep -c '.' || true)
-
-    if [[ "$COUNT" -gt 1 ]]; then
+    if [[ "$count" -gt 1 ]]; then
       log_error "Map modunda birden fazla pattern eşleşti!"
       log_error "Comment body: $comment_body"
-      log_error "Eşleşen reply sayısı: $COUNT"
+      log_error "Eşleşen reply sayısı: $count"
       exit 1
     fi
 
-    if [[ "$COUNT" -eq 1 ]]; then
-      echo "$MATCHES"
+    if [[ "$count" -eq 1 ]]; then
+      jq -r --arg body "$comment_body" '
+        [.[] | select(.pattern as $p | $body | test($p))][0].reply
+      ' "$MAP_FILE"
       return
     fi
 
@@ -403,6 +406,9 @@ fi
 while IFS="|" read -r COMMENT_ID COMMENT_NODE_ID; do
   [[ -z "$COMMENT_ID" || -z "$COMMENT_NODE_ID" ]] && continue
 
+  COMMENT_ID="${COMMENT_ID//$'\r'/}"
+  COMMENT_NODE_ID="${COMMENT_NODE_ID//$'\r'/}"
+
   THREAD_ID="${COMMENT_TO_THREAD[$COMMENT_NODE_ID]:-}"
   if [[ -z "$THREAD_ID" ]]; then
     log_warn "Thread bulunamadı → comment_id=$COMMENT_ID node_id=$COMMENT_NODE_ID"
@@ -428,6 +434,15 @@ while IFS="|" read -r COMMENT_ID COMMENT_NODE_ID; do
     -f body="$REPLY_TEXT" >/dev/null
 
   log_success "Reply eklendi → $COMMENT_ID"
+
+  THREAD_RESOLVED=$(jq -r --arg tid "$THREAD_ID" '
+    .[] | select(.id==$tid) | .isResolved
+  ' "$THREADS_JSON")
+
+  if [[ "$THREAD_RESOLVED" == "true" ]]; then
+    log_info "Thread zaten resolved, resolve adımı atlandı → $THREAD_ID"
+    continue
+  fi
 
   gh api graphql \
     -f query="
