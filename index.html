@@ -277,6 +277,26 @@
   
 
       
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="templates/workspace-with-demo/" class="md-tabs__link">
+          
+  
+    
+  
+  Templates
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -522,6 +542,78 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Templates
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Templates
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="templates/workspace-with-demo/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    workspace-with-demo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -622,7 +714,7 @@
 
     subgraph catalog["📚 Template Kataloğu"]
         T1["📦 demo-commercial-template\nv1.0.0"]
-        T2["📦 ...\n(ileride)"]
+        T2["📦 workspace-with-demo\nv1.0.0"]
     end
 
     S["⚡ Scaffold"]
@@ -630,6 +722,7 @@
 
     H --&gt; catalog
     T1 --&gt;|"seçilir"| S
+    T2 --&gt;|"seçilir"| S
     S --&gt;|"üretir"| W</code></pre>
 <hr />
 <h2 id="temel-ozellikler">Temel Özellikler<a class="headerlink" href="#temel-ozellikler" title="Permanent link">&para;</a></h2>
@@ -713,6 +806,11 @@ pwsh -File ./templates/demo-commercial-template/development/scripts/scaffold-dem
 <td>demo-commercial-template</td>
 <td><code>v1.0.0</code></td>
 <td>Bir ürünü public demo + private commercial olarak iki bağımsız repo halinde yönetme</td>
+</tr>
+<tr>
+<td>workspace-with-demo</td>
+<td><code>v1.0.0</code></td>
+<td>Private workspace + public demo submodule; güvenli, filtrelenmiş halka açık sürüm</td>
 </tr>
 </tbody>
 </table>
