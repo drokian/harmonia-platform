@@ -5,7 +5,7 @@
     Collects Copilot review artifacts for a pull request.
 .DESCRIPTION
     PowerShell 7 equivalent of review-collector_v0.2.sh.
-    Produces artifacts under ai-review/<repo>/PR<number>/:
+    Produces artifacts under development/.ai-review/<owner>.<repo>/PR-<number>/:
     - copilot-comments.json
     - copilot-reviews.json
     - review-threads.json
@@ -15,6 +15,7 @@
     - v1.0.0 (2026-04-18): İlk sürüm.
     - v1.1.0 (2026-04-20): GraphQL sorguları için güvenli değişken yönetimi (-f/-F) eklendi.
     - v1.2.0 (2026-04-22): API istekleri Start-ThreadJob ile asenkron hale getirildi.
+    - v1.2.1 (2026-04-23): Hata yönetimi ve kullanıcı geri bildirimleri geliştirildi. Outputdir yapısı optimize edildi.
 .PARAMETER Owner
     Repository owner (org/user).
 .PARAMETER Repo
@@ -37,7 +38,7 @@ param(
     [string]$PrNumber
 )
 
-$ScriptVersion = "v1.2.0"
+$ScriptVersion = "v1.2.1"
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
@@ -334,7 +335,7 @@ Show-Banner
 Ensure-Tools
 
 # Harmonia standart klasör yapısı
-$outputDir = Join-Path -Path "ai-review/$Repo" -ChildPath "PR$PrNumber"
+$outputDir = Join-Path -Path "development/.ai-review/$Owner.$Repo" -ChildPath "PR-$PrNumber"
 
 # Klasörü oluştur
 Safe-CreateDirectory -Path $outputDir
