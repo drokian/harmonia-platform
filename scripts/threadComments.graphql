@@ -8,7 +8,7 @@ query ThreadComments($threadId: ID!, $after: String) {
           path
           originalLine
           line
-          user {
+          author {
             login
           }
         }

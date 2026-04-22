@@ -35,6 +35,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidatePattern('^[A-Za-z0-9._-]+$')]
+    [ValidateScript({ $_ -notin '.', '..' -and -not $_.Contains('/') -and -not $_.Contains('\\') -and -not $_.Contains('..') })]
     [string]$Repo,
 
     [Parameter(Mandatory)]
@@ -106,18 +107,18 @@ function Show-Banner {
 function Ensure-ModeArguments {
     switch ($Mode) {
         'all' {
-            if (-not $ReplyFile) { throw '--ReplyFile all modu icin zorunlu.' }
+            if (-not $ReplyFile) { throw '-ReplyFile all modu icin zorunlu.' }
         }
         'filter-text' {
-            if (-not $FilterText) { throw '--FilterText filter-text modu icin zorunlu.' }
-            if (-not $ReplyFile) { throw '--ReplyFile filter-text modu icin zorunlu.' }
+            if (-not $FilterText) { throw '-FilterText filter-text modu icin zorunlu.' }
+            if (-not $ReplyFile) { throw '-ReplyFile filter-text modu icin zorunlu.' }
         }
         'filter-regex' {
-            if (-not $Regex) { throw '--Regex filter-regex modu icin zorunlu.' }
-            if (-not $ReplyFile) { throw '--ReplyFile filter-regex modu icin zorunlu.' }
+            if (-not $Regex) { throw '-Regex filter-regex modu icin zorunlu.' }
+            if (-not $ReplyFile) { throw '-ReplyFile filter-regex modu icin zorunlu.' }
         }
         'map' {
-            if (-not $MapFile) { throw '--MapFile map modu icin zorunlu.' }
+            if (-not $MapFile) { throw '-MapFile map modu icin zorunlu.' }
         }
     }
 }

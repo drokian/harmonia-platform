@@ -16,6 +16,7 @@
 param(
     [Parameter(Mandatory)]
     [ValidatePattern('^[A-Za-z0-9._-]+$')]
+    [ValidateScript({ $_ -notin '.', '..' -and -not $_.Contains('/') -and -not $_.Contains('\\') -and -not $_.Contains('..') })]
     [string]$Repo,
 
     [Parameter(Mandatory)]

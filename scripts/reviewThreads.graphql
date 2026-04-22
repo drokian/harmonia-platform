@@ -12,7 +12,7 @@ query ReviewThreads($owner: String!, $repo: String!, $pr: Int!, $after: String) 
               path
               originalLine
               line
-              user {
+              author {
                 login
               }
             }

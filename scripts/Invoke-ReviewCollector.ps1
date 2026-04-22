@@ -5,7 +5,7 @@
     Collects Copilot review artifacts for a pull request.
 .DESCRIPTION
     PowerShell 7 equivalent of review-collector_v0.2.sh.
-    Produces artifacts under ai-review/<owner.repo>/PR-<number>/:
+    Produces artifacts under ai-review/<repo>/PR<number>/:
     - copilot-comments.json
     - copilot-reviews.json
     - review-threads.json
@@ -29,6 +29,7 @@ param(
 
     [Parameter(Mandatory)]
     [ValidatePattern('^[A-Za-z0-9._-]+$')]
+    [ValidateScript({ $_ -notin '.', '..' -and -not $_.Contains('/') -and -not $_.Contains('\\') -and -not $_.Contains('..') })]
     [string]$Repo,
 
     [Parameter(Mandatory)]
@@ -95,56 +96,20 @@ function Gh-ApiJson {
         [string]$Context
     )
 
-    # stdout ve stderr'i ayır
-    $stdout = New-Object System.Text.StringBuilder
-    $stderr = New-Object System.Text.StringBuilder
-
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = "gh"
-    $psi.ArgumentList.AddRange($Arguments)
-    $psi.RedirectStandardOutput = $true
-    $psi.RedirectStandardError  = $true
-    $psi.UseShellExecute = $false
-    $psi.CreateNoWindow = $true
-
-    $proc = New-Object System.Diagnostics.Process
-    $proc.StartInfo = $psi
-
-    $null = $proc.Start()
-
-    # stdout/stderr topla
-    while (-not $proc.HasExited) {
-        $stdout.Append($proc.StandardOutput.ReadToEnd()) | Out-Null
-        $stderr.Append($proc.StandardError.ReadToEnd())  | Out-Null
-        Start-Sleep -Milliseconds 10
-    }
-
-    # kalan buffer'ları da al
-    $stdout.Append($proc.StandardOutput.ReadToEnd()) | Out-Null
-    $stderr.Append($proc.StandardError.ReadToEnd())  | Out-Null
-
-    $exit = $proc.ExitCode
-    $outStr = $stdout.ToString().Trim()
-    $errStr = $stderr.ToString().Trim()
-
-    if ($exit -ne 0) {
-        Log-Err "$Context başarısız (exit code: $exit)."
-        if ($errStr) {
-            $errStr.Split("`n") | ForEach-Object { Write-Host "[ERROR]   $_" }
-        }
+    $result = & gh @Arguments 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Log-Err "$Context başarısız."
+        $result | ForEach-Object { Write-Host "[ERROR]   $_" }
         exit 1
     }
 
-    # JSON parse
+    $outStr = ($result -join "`n").Trim()
+
     try {
         return $outStr | ConvertFrom-Json -Depth 100
     }
     catch {
         Log-Err "$Context JSON parse hatası: $($_.Exception.Message)"
-        if ($errStr) {
-            Write-Host "[ERROR]   gh stderr:"
-            $errStr.Split("`n") | ForEach-Object { Write-Host "[ERROR]   $_" }
-        }
         Write-Host "[ERROR]   gh stdout:"
         $outStr.Split("`n") | ForEach-Object { Write-Host "[ERROR]   $_" }
         exit 1
@@ -154,16 +119,33 @@ function Gh-ApiJson {
 function Load-GraphQLQuery {
     param([Parameter(Mandatory)][string]$Path)
 
-    if (-not (Test-Path $Path)) {
+    $candidatePaths = @($Path)
+    if (-not [string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+        $candidatePaths += Join-Path -Path $PSScriptRoot -ChildPath $Path
+        $candidatePaths += Join-Path -Path $PSScriptRoot -ChildPath ([System.IO.Path]::GetFileName($Path))
+    }
+    $candidatePaths += Join-Path -Path (Get-Location) -ChildPath $Path
+    $candidatePaths += Join-Path -Path (Get-Location) -ChildPath ([System.IO.Path]::GetFileName($Path))
+    $candidatePaths = $candidatePaths | Select-Object -Unique
+
+    $resolvedPath = $null
+    foreach ($candidate in $candidatePaths) {
+        if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+            $resolvedPath = $candidate
+            break
+        }
+    }
+
+    if (-not $resolvedPath) {
         Log-Err "GraphQL dosyası bulunamadı: $Path"
         exit 1
     }
 
     try {
-        return Get-Content -Raw -Path $Path
+        return Get-Content -Raw -LiteralPath $resolvedPath
     }
     catch {
-        Log-Err "GraphQL dosyası okunamadı: $Path"
+        Log-Err "GraphQL dosyası okunamadı: $resolvedPath"
         Log-Err $_.Exception.Message
         exit 1
     }
@@ -182,6 +164,11 @@ function Fetch-AllPages {
         if ($resp -is [System.Array]) {
             $all += $resp
             if ($resp.Count -lt 100) { break }
+        }
+        elseif ($resp -and ($resp.PSObject.Properties.Name -contains 'id')) {
+            # Some endpoints may effectively return a single object in PowerShell parsing; normalize to array.
+            $all += @($resp)
+            break
         }
         else {
             Log-Err "REST API beklenmeyen format dondurdu: $path"
@@ -238,12 +225,7 @@ function Fetch-ThreadCommentsPages {
     $cursorLocal = $Cursor
 
     while ($hasNext) {
-        $afterClause = ''
-        if (-not [string]::IsNullOrWhiteSpace($cursorLocal)) {
-            $afterClause = ", after: `"$cursorLocal`""
-        }
-
-        $queryTemplate = Load-GraphQLQuery -Path "queries/threadComments.graphql"
+        $queryTemplate = Load-GraphQLQuery -Path "scripts/threadComments.graphql"
 
         $vars = @{ threadId = $ThreadId }
         if (-not [string]::IsNullOrWhiteSpace($cursorLocal)) {
@@ -269,12 +251,7 @@ function Fetch-ReviewThreads {
     $cursor = ''
 
     while ($hasNext) {
-        $afterClause = ''
-        if (-not [string]::IsNullOrWhiteSpace($cursor)) {
-            $afterClause = ", after: `"$cursor`""
-        }
-
-        $queryTemplate = Load-GraphQLQuery -Path "queries/reviewThreads.graphql"
+        $queryTemplate = Load-GraphQLQuery -Path "scripts/reviewThreads.graphql"
 
         $vars = @{
             owner = $Owner
@@ -356,11 +333,8 @@ Show-Banner
 # exit # Remove this line to enable script execution
 Ensure-Tools
 
-# Deterministik repo anahtarı
-$repoKey = "$Owner.$Repo"
-
-# Yeni Harmonia klasör yapısı
-$outputDir = Join-Path -Path "ai-review/$repoKey" -ChildPath "pr-$PrNumber"
+# Harmonia standart klasör yapısı
+$outputDir = Join-Path -Path "ai-review/$Repo" -ChildPath "PR$PrNumber"
 
 # Klasörü oluştur
 Safe-CreateDirectory -Path $outputDir
@@ -373,36 +347,21 @@ $mdFile       = Join-Path $outputDir 'copilot-review.md'
 $copilotCommentsLogin = if ($env:COPILOT_COMMENTS_LOGIN) { $env:COPILOT_COMMENTS_LOGIN } else { 'Copilot' }
 $copilotReviewsLogin = if ($env:COPILOT_REVIEWS_LOGIN) { $env:COPILOT_REVIEWS_LOGIN } else { 'copilot-pull-request-reviewer[bot]' }
 
-Log-Info 'Veriler asenkron (paralel) olarak cekiliyor...'
+Log-Info 'REST API: comments + reviews aliniyor...'
+$commentsResponse = Fetch-AllPages -Endpoint "repos/$Owner/$Repo/pulls/$PrNumber/comments"
+$reviewsResponse  = Fetch-AllPages -Endpoint "repos/$Owner/$Repo/pulls/$PrNumber/reviews"
+Log-Ok 'REST API kaydedildi.'
 
-# Thread'lerin ilgili fonksiyonları tanıyabilmesi için kopyalıyoruz
-$initScript = [scriptblock]::Create("
-    function Log-Err { ${function:Log-Err} }
-    function Gh-ApiJson { ${function:Gh-ApiJson} }
-    function Fetch-AllPages { ${function:Fetch-AllPages} }
-    function Load-GraphQLQuery { ${function:Load-GraphQLQuery} }
-    function Invoke-GraphQL { ${function:Invoke-GraphQL} }
-    function Fetch-ThreadCommentsPages { ${function:Fetch-ThreadCommentsPages} }
-    function Fetch-ReviewThreads { ${function:Fetch-ReviewThreads} }
-")
-# İşlemleri paralel başlat ($using: ile global değişkenleri thread'e aktarıyoruz)
-$jobComments = Start-ThreadJob -InitializationScript $initScript -ScriptBlock { Fetch-AllPages -Endpoint "repos/$using:Owner/$using:Repo/pulls/$using:PrNumber/comments" }
-$jobReviews  = Start-ThreadJob -InitializationScript $initScript -ScriptBlock { Fetch-AllPages -Endpoint "repos/$using:Owner/$using:Repo/pulls/$using:PrNumber/reviews" }
-$jobThreads  = Start-ThreadJob -InitializationScript $initScript -ScriptBlock { Fetch-ReviewThreads -Owner $using:Owner -Repo $using:Repo -PrNumber $using:PrNumber }
-# Tüm thread'lerin bitmesini bekle ve sonuçları al
-$commentsResponse = Receive-Job -Job $jobComments -Wait -AutoRemoveJob
-$reviewsResponse  = Receive-Job -Job $jobReviews -Wait -AutoRemoveJob
-$threadsResponse  = Receive-Job -Job $jobThreads -Wait -AutoRemoveJob
-Log-Ok 'Tüm veriler başarıyla çekildi.'
+Log-Info "GraphQL: review thread'leri aliniyor..."
+$threadsResponse = Fetch-ReviewThreads -Owner $Owner -Repo $Repo -PrNumber $PrNumber
+Log-Ok 'Thread verileri kaydedildi.'
 # ... reviews ve threads json kayıtları ...
 $commentsJsonContent = $commentsResponse | ConvertTo-Json -Depth 100
 Safe-WriteFile -Path $commentsJson -Content $commentsJsonContent
 $reviewsJsonContent = $reviewsResponse | ConvertTo-Json -Depth 100
 Safe-WriteFile -Path $reviewsJson -Content $reviewsJsonContent
-Log-Ok 'REST API kaydedildi.'
 $threadsJsonContent = $threadsResponse | ConvertTo-Json -Depth 100
 Safe-WriteFile -Path $threadsJson -Content $threadsJsonContent
-Log-Ok 'Thread verileri kaydedildi.'
 Log-Info 'Markdown raporu üretiliyor...'
 $commentCount = @($commentsResponse).Count
 $reviewCount = @($reviewsResponse).Count
@@ -450,8 +409,8 @@ if ($threadCount -gt 0) {
         }
 
         $isCopilot = $false
-        if ($first.user -and $first.user.login) {
-            $login = $first.user.login.ToLower()
+        if ($first.author -and $first.author.login) {
+            $login = $first.author.login.ToLower()
             if ($login.Contains($copilotCommentsLogin.ToLower())) {
                 $isCopilot = $true
             }
