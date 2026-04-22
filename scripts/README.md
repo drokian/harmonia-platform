@@ -34,6 +34,7 @@ Not: BL-018 kapsaminda `.sh` script'ler kademeli olarak `.ps1` script'lere tasin
 - `reply-resolve_v0.2.sh`
 - `Invoke-ReplyResolve.ps1` (BL-018 migration)
 - `verify-review-threads_v0.2.sh`
+- `Test-ReviewThreads.ps1` (BL-018 migration)
 - `cleanup_v0.2.sh`
 - `Invoke-Cleanup.ps1` (BL-018 migration)
 - `create-repo_v0.3.sh`
