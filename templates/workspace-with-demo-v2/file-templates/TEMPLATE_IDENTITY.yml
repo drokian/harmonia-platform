@@ -1,0 +1,21 @@
+template:
+  name: workspace-with-demo
+  version: v2.0.0
+  source: harmonia-platform
+  catalog_url: https://github.com/drokian/harmonia-platform
+
+workspace:
+  name: "{{WORKSPACE_NAME}}"
+  created_date: "{{CREATED_DATE}}"
+  created_by: "{{CREATED_BY}}"
+
+provenance:
+  scaffold_tool: install.ps1
+  scaffold_version: v2.0.0
+  scaffold_mode: "{{SCAFFOLD_MODE}}"
+
+history:
+  - date: "{{CREATED_DATE}}"
+    action: initial scaffold
+    template_version: v2.0.0
+    notes: ""

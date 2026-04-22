@@ -25,9 +25,65 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# NOT IMPLEMENTED — PR-3'te gerceklestirilecek
+$templateDirectories = @(
+    '.github',
+    '.github/workflows',
+    'docs',
+    'docs/architecture',
+    'docs/installation',
+    'development',
+    'development/backlogs',
+    'development/sprints',
+    'development/sprints/archive',
+    'development/decisions',
+    'development/conventions',
+    'development/guides',
+    'development/checklists',
+    'development/glossary',
+    'scripts',
+    'backups',
+    'demo'
+)
+
+$created = 0
+$skipped = 0
+
 Write-Host "New-DirectoryStructure" -ForegroundColor Cyan
 Write-Host "TargetPath : $TargetPath"
 Write-Host "DryRun     : $($DryRun.IsPresent)"
-Write-Warning "Not implemented. PR-3'te implementasyon tamamlanacak."
+
+if (-not (Test-Path -LiteralPath $TargetPath -PathType Container)) {
+    if ($DryRun) {
+        Write-Host "[DRYRUN] Root klasor olusturulacak: $TargetPath"
+    }
+    else {
+        New-Item -Path $TargetPath -ItemType Directory -Force | Out-Null
+        Write-Host "[OK] Root klasor olusturuldu: $TargetPath"
+    }
+}
+
+foreach ($relativePath in $templateDirectories) {
+    $fullPath = Join-Path -Path $TargetPath -ChildPath $relativePath
+
+    if (Test-Path -LiteralPath $fullPath -PathType Container) {
+        $skipped++
+        Write-Host "[SKIP] Zaten var: $relativePath"
+        continue
+    }
+
+    if ($DryRun) {
+        Write-Host "[DRYRUN] Klasor olusturulacak: $relativePath"
+    }
+    else {
+        New-Item -Path $fullPath -ItemType Directory -Force | Out-Null
+        Write-Host "[OK] Klasor olusturuldu: $relativePath"
+        $created++
+    }
+}
+
+Write-Host ""
+Write-Host "Ozet" -ForegroundColor Cyan
+Write-Host "Created : $created"
+Write-Host "Skipped : $skipped"
+
 exit 0
