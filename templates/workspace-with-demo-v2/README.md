@@ -12,10 +12,10 @@ Bu template, urunun `private` bir workspace'te gelistirilmesi ve `public` bir de
 
 ```powershell
 # Guided mod (interaktif, 6 asama)
-pwsh scripts/install.ps1 --mode guided
+pwsh scripts/install.ps1 -Mode guided
 
 # Auto mod (tek ekranda parametreler)
-pwsh scripts/install.ps1 --mode auto
+pwsh scripts/install.ps1 -Mode auto
 
 # Linux/macOS (PS7 kuruluysa)
 bash scripts/install.sh
@@ -67,17 +67,21 @@ my-workspace/
 
 ## Script Paketi
 
-| Script | Aciklama |
-|---|---|
-| `scripts/install.ps1` | TUI ana dongusu — guided ve auto mod |
-| `scripts/install.sh` | PS7 varligi kontrol eder, `install.ps1`'e yonlendirir |
-| `scripts/New-DirectoryStructure.ps1` | Hedef workspace klasor yapisini olusturur |
-| `scripts/New-FileSet.ps1` | Dosyalari here-string ve `file-templates/`'ten uretir |
-| `scripts/Set-GitRepositories.ps1` | Git init, remote, submodule baglama |
-| `scripts/Test-TemplateStructure.ps1` | Manifest bazli yapı dogrulama (kaynak ve uretilen) |
-| `scripts/Test-SecretsInDemo.ps1` | Demo'da secret taramasi, allowlist destekli |
-| `scripts/Sync-ToDemo.ps1` | Dosya/build ciktisini demo'ya kopyalar, secret + forbidden filtreli |
-| `scripts/Update-TemplateVersion.ps1` | TEMPLATE_VERSION, README ve CHANGELOG tutarli gunceller |
+Aşağıdaki tablo iki gruba ayrılır:
+- **Kurulum script'leri** (yalnızca Harmonia repo'sunda durur, workspace'e kopyalanmaz)
+- **Operasyon script'leri** (üretilen workspace'in `scripts/` dizinine kopyalanır)
+
+| Script | Grup | Aciklama |
+|---|---|---|
+| `scripts/install.ps1` | Kurulum | TUI ana dongusu — guided ve auto mod |
+| `scripts/install.sh` | Kurulum | PS7 varligi kontrol eder, `install.ps1`'e yonlendirir |
+| `scripts/New-DirectoryStructure.ps1` | Kurulum | Hedef workspace klasor yapisini olusturur |
+| `scripts/New-FileSet.ps1` | Kurulum | Dosyalari here-string ve `file-templates/`'ten uretir |
+| `scripts/Set-GitRepositories.ps1` | Kurulum | Git init, remote, submodule baglama |
+| `scripts/Test-TemplateStructure.ps1` | Operasyon | Manifest bazli yapı dogrulama (kaynak ve uretilen) |
+| `scripts/Test-SecretsInDemo.ps1` | Operasyon | Demo'da secret taramasi, allowlist destekli |
+| `scripts/Sync-ToDemo.ps1` | Operasyon | Dosya/build ciktisini demo'ya kopyalar, secret + forbidden filtreli |
+| `scripts/Update-TemplateVersion.ps1` | Operasyon | TEMPLATE_VERSION, README ve CHANGELOG tutarli gunceller |
 
 ---
 

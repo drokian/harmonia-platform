@@ -22,8 +22,7 @@
     pwsh scripts/Update-TemplateVersion.ps1 -Bump minor -Date 2026-05-01
 #>
 param(
-    [ValidateSet('major', 'minor', 'patch')]
-    [string]$Bump = '',
+    [string]$Bump = $null,
 
     [string]$Version = '',
 

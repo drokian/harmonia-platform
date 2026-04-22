@@ -24,10 +24,12 @@ jobs:
       - name: Install dependencies if package.json exists
         shell: bash
         run: |
-          if [ -f package.json ]; then
+          if [ -f package.json ] && { [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; }; then
             npm ci
+          elif [ -f package.json ]; then
+            npm install
           else
-            echo "No package.json at workspace root, skipping npm ci"
+            echo "No package.json at workspace root, skipping npm install"
           fi
 
       - name: Run tests placeholder

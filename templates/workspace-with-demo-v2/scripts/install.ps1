@@ -9,8 +9,8 @@
 .PARAMETER Mode
     Kurulum modu: guided | auto
 .EXAMPLE
-    pwsh scripts/install.ps1 --mode guided
-    pwsh scripts/install.ps1 --mode auto
+    pwsh scripts/install.ps1 -Mode guided
+    pwsh scripts/install.ps1 -Mode auto
 #>
 param(
     [ValidateSet('guided', 'auto')]

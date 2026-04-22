@@ -107,10 +107,12 @@ jobs:
             exit 1
           fi
 
-          if ! git submodule status demo 2>/dev/null | grep -qE '^\+?[0-9a-f]'; then
-            echo "demo/ directory exists but is not a registered git submodule."
-            echo "Expected: demo/ must be a git submodule."
-            exit 1
+          if ! git ls-tree HEAD demo 2>/dev/null | grep -q '^160000'; then
+            if ! grep -qE '^\[submodule' .gitmodules 2>/dev/null || ! grep -q '"demo"' .gitmodules 2>/dev/null; then
+              echo "demo/ directory exists but is not a registered git submodule."
+              echo "Expected: demo/ must be a git submodule (check .gitmodules)."
+              exit 1
+            fi
           fi
 
           echo "demo/ submodule check passed."
@@ -134,23 +136,39 @@ jobs:
             ' .github/template-manifest.yml
           }
 
-          mapfile -t forbidden_globs < <(extract_generated_list forbidden_globs)
+          mapfile -t manifest_globs < <(extract_generated_list forbidden_globs)
 
-          if [ "${#forbidden_globs[@]}" -eq 0 ]; then
+          if [ "${#manifest_globs[@]}" -eq 0 ]; then
             echo "No generated_validation.forbidden_globs found in .github/template-manifest.yml"
             exit 1
           fi
 
+          forbidden_globs=()
+          allowed_globs=()
+          for pattern in "${manifest_globs[@]}"; do
+            if [[ "$pattern" == !* ]]; then
+              allowed_globs+=("${pattern#!}")
+            else
+              forbidden_globs+=("$pattern")
+            fi
+          done
+
+          declare -A allowed_matches
+          for pattern in "${allowed_globs[@]}"; do
+            while IFS= read -r match; do
+              allowed_matches["$match"]=1
+            done < <(compgen -G "$pattern" 2>/dev/null || true)
+          done
+
           failed=0
           for pattern in "${forbidden_globs[@]}"; do
-            # Skip negation patterns (allowlist entries like !**/.env.example)
-            if [[ "$pattern" == !* ]]; then
-              continue
-            fi
-            if compgen -G "$pattern" > /dev/null 2>&1; then
-              echo "Forbidden artifact matched pattern: $pattern"
+            while IFS= read -r match; do
+              if [[ -n "${allowed_matches["$match"]+x}" ]]; then
+                continue
+              fi
+              echo "Forbidden artifact matched pattern '$pattern': $match"
               failed=1
-            fi
+            done < <(compgen -G "$pattern" 2>/dev/null || true)
           done
 
           if [ "$failed" -ne 0 ]; then
