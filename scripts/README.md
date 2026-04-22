@@ -19,18 +19,26 @@ parametrelerini ve ornek kullanimlarini tek yerde toplar.
 ## Gereksinimler
 
 - Bash 4+
+- PowerShell 7+ (`pwsh`)
 - GitHub CLI (`gh`) ve aktif oturum (`gh auth status`)
 - `jq`
 
 Not: Windows ortaminda WSL/bash veya Git Bash kullanilmasi onerilir.
 
+Not: BL-018 kapsaminda `.sh` script'ler kademeli olarak `.ps1` script'lere tasinmaktadir.
+
 ## Script Listesi
 
 - `review-collector_v0.2.sh`
+- `Invoke-ReviewCollector.ps1` (BL-018 migration)
 - `reply-resolve_v0.2.sh`
+- `Invoke-ReplyResolve.ps1` (BL-018 migration)
 - `verify-review-threads_v0.2.sh`
+- `Test-ReviewThreads.ps1` (BL-018 migration)
 - `cleanup_v0.2.sh`
+- `Invoke-Cleanup.ps1` (BL-018 migration)
 - `create-repo_v0.3.sh`
+- `Invoke-CreateRepo.ps1` (BL-018 migration)
 
 ## 1) review-collector_v0.2.sh
 
@@ -146,6 +154,12 @@ Kullanim:
 bash scripts/cleanup_v0.2.sh <repo> <pr_number>
 ```
 
+PowerShell esdegeri (BL-018 migration):
+
+```powershell
+pwsh scripts/Invoke-Cleanup.ps1 -Repo <repo> -PrNumber <pr_number>
+```
+
 ## 5) create-repo_v0.3.sh
 
 Amac:
@@ -167,13 +181,21 @@ Kullanim:
 bash scripts/create-repo_v0.3.sh [--dry-run] <hesap> <repo-adi> <public|private>
 ```
 
+PowerShell esdegeri (BL-018 migration):
+
+```powershell
+pwsh scripts/Invoke-CreateRepo.ps1 [-DryRun] -Owner <hesap> -RepoName <repo-adi> -Visibility <public|private>
+```
+
 ## Onerilen Operasyon Akisi
 
 1. `review-collector_v0.2.sh` ile veriyi topla.
+1. veya `Invoke-ReviewCollector.ps1` ile veriyi topla.
 2. Kod duzeltmelerini tamamla.
 3. `reply-resolve_v0.2.sh` ile yorumlara yanit ver ve thread resolve et.
 4. `verify-review-threads_v0.2.sh` ile thread durumunu dogrula.
 5. Gerekirse `cleanup_v0.2.sh` ile PR cikti klasorunu temizle.
+6. PowerShell akisinda temizleme icin `Invoke-Cleanup.ps1` kullan.
 
 ## Gelecek Gelistirme Notu
 
