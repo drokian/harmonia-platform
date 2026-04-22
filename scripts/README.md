@@ -38,6 +38,7 @@ Not: BL-018 kapsaminda `.sh` script'ler kademeli olarak `.ps1` script'lere tasin
 - `cleanup_v0.2.sh`
 - `Invoke-Cleanup.ps1` (BL-018 migration)
 - `create-repo_v0.3.sh`
+- `Invoke-CreateRepo.ps1` (BL-018 migration)
 
 ## 1) review-collector_v0.2.sh
 
@@ -178,6 +179,12 @@ Kullanim:
 
 ```bash
 bash scripts/create-repo_v0.3.sh [--dry-run] <hesap> <repo-adi> <public|private>
+```
+
+PowerShell esdegeri (BL-018 migration):
+
+```powershell
+pwsh scripts/Invoke-CreateRepo.ps1 [-DryRun] -Owner <hesap> -RepoName <repo-adi> -Visibility <public|private>
 ```
 
 ## Onerilen Operasyon Akisi
