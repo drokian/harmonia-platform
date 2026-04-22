@@ -153,6 +153,12 @@ Kullanim:
 bash scripts/cleanup_v0.2.sh <repo> <pr_number>
 ```
 
+PowerShell esdegeri (BL-018 migration):
+
+```powershell
+pwsh scripts/Invoke-Cleanup.ps1 -Repo <repo> -PrNumber <pr_number>
+```
+
 ## 5) create-repo_v0.3.sh
 
 Amac:
@@ -182,6 +188,7 @@ bash scripts/create-repo_v0.3.sh [--dry-run] <hesap> <repo-adi> <public|private>
 3. `reply-resolve_v0.2.sh` ile yorumlara yanit ver ve thread resolve et.
 4. `verify-review-threads_v0.2.sh` ile thread durumunu dogrula.
 5. Gerekirse `cleanup_v0.2.sh` ile PR cikti klasorunu temizle.
+6. PowerShell akisinda temizleme icin `Invoke-Cleanup.ps1` kullan.
 
 ## Gelecek Gelistirme Notu
 
