@@ -14,6 +14,8 @@
     Workspace'in git remote URL'i. Belirtilmezse remote eklenmez.
 .PARAMETER SkipRemote
     Remote baglama adimini atla.
+.PARAMETER AllowSubmoduleFailure
+    Submodule ekleme basarisiz olursa hata vermeden devam et (exit 0).
 .EXAMPLE
     pwsh scripts/Set-GitRepositories.ps1 -WorkspacePath "D:\work\my-workspace" -DemoRepoUrl "https://github.com/org/demo"
     pwsh scripts/Set-GitRepositories.ps1 -WorkspacePath "D:\work\my-workspace" -DemoRepoUrl "https://github.com/org/demo" -WorkspaceRepoUrl "git@github.com:org/my-workspace.git"
@@ -27,7 +29,9 @@ param(
 
     [string]$WorkspaceRepoUrl = '',
 
-    [switch]$SkipRemote
+    [switch]$SkipRemote,
+
+    [switch]$AllowSubmoduleFailure
 )
 
 Set-StrictMode -Version Latest
@@ -118,7 +122,7 @@ try {
         }
         else {
             try {
-                if (Test-Path -LiteralPath $demoPath -PathType Container) {
+                if (Test-Path -LiteralPath $demoPath) {
                     Remove-Item -LiteralPath $demoPath -Recurse -Force
                 }
                 Invoke-Git -Args @('submodule', 'add', $DemoRepoUrl, 'demo') -ErrorContext 'git submodule add basarisiz'
@@ -129,6 +133,9 @@ try {
                 Write-Host "[WARN] $_"
                 Write-Host "[WARN] Demo repo'yu olusturup asagidaki komutu manuel calistirin:"
                 Write-Host "       git submodule add $DemoRepoUrl demo"
+                if (-not $AllowSubmoduleFailure) {
+                    exit 1
+                }
             }
         }
     }

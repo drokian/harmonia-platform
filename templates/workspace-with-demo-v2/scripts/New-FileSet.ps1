@@ -64,7 +64,12 @@ function Write-GeneratedFile {
     if (-not (Test-Path -LiteralPath $parentDir -PathType Container)) {
         New-Item -ItemType Directory -Path $parentDir -Force | Out-Null
     }
-    $Content | Out-File -FilePath $Path -Encoding utf8
+    if ($Content.Length -eq 0) {
+        [System.IO.File]::WriteAllBytes($Path, [byte[]]@())
+    }
+    else {
+        $Content | Out-File -FilePath $Path -Encoding utf8
+    }
     Write-Host "[OK] Dosya olusturuldu: $Path"
 }
 
@@ -74,14 +79,15 @@ function Get-RelativePathFromRoot {
         [Parameter(Mandatory)][string]$FullPath
     )
 
-    $base = [System.IO.Path]::GetFullPath($BasePath).TrimEnd('\\')
+    $base = [System.IO.Path]::GetFullPath($BasePath)
     $full = [System.IO.Path]::GetFullPath($FullPath)
 
-    if (-not $full.StartsWith($base, [System.StringComparison]::OrdinalIgnoreCase)) {
+    $normalizedBase = $base.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+    if (-not $full.StartsWith($normalizedBase, [System.StringComparison]::OrdinalIgnoreCase)) {
         throw "Path root mismatch. Base: $base | Full: $full"
     }
 
-    return $full.Substring($base.Length).TrimStart('\\')
+    return [System.IO.Path]::GetRelativePath($base, $full)
 }
 
 Write-Host "New-FileSet" -ForegroundColor Cyan
@@ -95,6 +101,10 @@ Write-Host "DryRun        : $($DryRun.IsPresent)"
 $templateRoot = Split-Path -Parent $PSScriptRoot
 $fileTemplatesRoot = Join-Path $templateRoot 'file-templates'
 $templateManifestPath = Join-Path $templateRoot '.github/template-manifest.yml'
+$templateVersionPath = Join-Path $templateRoot 'TEMPLATE_VERSION'
+$templateVersion = if (Test-Path -LiteralPath $templateVersionPath -PathType Leaf) {
+    (Get-Content -LiteralPath $templateVersionPath -Raw).Trim()
+} else { 'v2.0.0' }
 
 if (-not (Test-Path -LiteralPath $fileTemplatesRoot -PathType Container)) {
     throw "file-templates klasoru bulunamadi: $fileTemplatesRoot"
@@ -102,7 +112,7 @@ if (-not (Test-Path -LiteralPath $fileTemplatesRoot -PathType Container)) {
 
 $createdBy = ''
 try {
-    $createdBy = (& git config user.name 2>$null)
+    $createdBy = ([string](& git config user.name 2>$null)).Trim()
 }
 catch {
     $createdBy = ''
@@ -149,7 +159,7 @@ trim_trailing_whitespace = true
 $changeLog = @"
 # Template Changelog
 
-## v2.0.0 - $CreatedDate
+## $templateVersion - $CreatedDate
 
 - Initial scaffold output.
 "@
@@ -162,7 +172,7 @@ $secretscanIgnore = @"
 
 Write-GeneratedFile -Path (Join-Path $TargetPath '.gitignore') -Content $gitignore
 Write-GeneratedFile -Path (Join-Path $TargetPath '.editorconfig') -Content $editorconfig
-Write-GeneratedFile -Path (Join-Path $TargetPath 'TEMPLATE_VERSION') -Content 'v2.0.0'
+Write-GeneratedFile -Path (Join-Path $TargetPath 'TEMPLATE_VERSION') -Content $templateVersion
 Write-GeneratedFile -Path (Join-Path $TargetPath 'TEMPLATE_CHANGELOG.md') -Content $changeLog
 Write-GeneratedFile -Path (Join-Path $TargetPath '.secretscanignore') -Content $secretscanIgnore
 Write-GeneratedFile -Path (Join-Path $TargetPath 'backups/.gitkeep') -Content ''

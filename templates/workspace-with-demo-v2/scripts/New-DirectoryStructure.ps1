@@ -77,8 +77,8 @@ foreach ($relativePath in $templateDirectories) {
     else {
         New-Item -Path $fullPath -ItemType Directory -Force | Out-Null
         Write-Host "[OK] Klasor olusturuldu: $relativePath"
+        $created++
     }
-    $created++
 }
 
 Write-Host ""
