@@ -30,6 +30,7 @@ Not: BL-018 kapsaminda `.sh` script'ler kademeli olarak `.ps1` script'lere tasin
 ## Script Listesi
 
 - `review-collector_v0.2.sh`
+- `Invoke-ReviewCollector.ps1` (BL-018 migration)
 - `reply-resolve_v0.2.sh`
 - `verify-review-threads_v0.2.sh`
 - `cleanup_v0.2.sh`
@@ -174,6 +175,7 @@ bash scripts/create-repo_v0.3.sh [--dry-run] <hesap> <repo-adi> <public|private>
 ## Onerilen Operasyon Akisi
 
 1. `review-collector_v0.2.sh` ile veriyi topla.
+1. veya `Invoke-ReviewCollector.ps1` ile veriyi topla.
 2. Kod duzeltmelerini tamamla.
 3. `reply-resolve_v0.2.sh` ile yorumlara yanit ver ve thread resolve et.
 4. `verify-review-threads_v0.2.sh` ile thread durumunu dogrula.
