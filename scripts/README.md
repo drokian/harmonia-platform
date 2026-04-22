@@ -19,10 +19,13 @@ parametrelerini ve ornek kullanimlarini tek yerde toplar.
 ## Gereksinimler
 
 - Bash 4+
+- PowerShell 7+ (`pwsh`)
 - GitHub CLI (`gh`) ve aktif oturum (`gh auth status`)
 - `jq`
 
 Not: Windows ortaminda WSL/bash veya Git Bash kullanilmasi onerilir.
+
+Not: BL-018 kapsaminda `.sh` script'ler kademeli olarak `.ps1` script'lere tasinmaktadir.
 
 ## Script Listesi
 
@@ -30,6 +33,7 @@ Not: Windows ortaminda WSL/bash veya Git Bash kullanilmasi onerilir.
 - `reply-resolve_v0.2.sh`
 - `verify-review-threads_v0.2.sh`
 - `cleanup_v0.2.sh`
+- `Invoke-Cleanup.ps1` (BL-018 migration)
 - `create-repo_v0.3.sh`
 
 ## 1) review-collector_v0.2.sh
