@@ -1,0 +1,221 @@
+name: Template Validation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: false
+
+      - name: Ensure manifest file exists
+        shell: bash
+        run: |
+          if [ ! -f ".github/template-manifest.yml" ]; then
+            echo "Missing .github/template-manifest.yml"
+            exit 1
+          fi
+
+      - name: Validate required directories
+        shell: bash
+        run: |
+          # Reads generated_validation.required_dirs section from manifest using awk
+          extract_generated_list() {
+            local section="$1"
+            awk -v section="$section" '
+              /^generated_validation:/ { in_generated=1; next }
+              in_generated && /^[^[:space:]].*:/ && !/^generated_validation:/ { in_generated=0 }
+              in_generated && $0 ~ "^[[:space:]]+"section":" { in_section=1; next }
+              in_generated && in_section && /^[[:space:]]+[^[:space:]-]/ { in_section=0 }
+              in_generated && in_section && /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t required_dirs < <(extract_generated_list required_dirs)
+
+          if [ "${#required_dirs[@]}" -eq 0 ]; then
+            echo "No generated_validation.required_dirs found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          failed=0
+          for path in "${required_dirs[@]}"; do
+            if [ ! -d "$path" ]; then
+              echo "Missing required directory: $path"
+              failed=1
+            fi
+          done
+
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo "All required directories present."
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          extract_generated_list() {
+            local section="$1"
+            awk -v section="$section" '
+              /^generated_validation:/ { in_generated=1; next }
+              in_generated && /^[^[:space:]].*:/ && !/^generated_validation:/ { in_generated=0 }
+              in_generated && $0 ~ "^[[:space:]]+"section":" { in_section=1; next }
+              in_generated && in_section && /^[[:space:]]+[^[:space:]-]/ { in_section=0 }
+              in_generated && in_section && /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t required_files < <(extract_generated_list required_files)
+
+          if [ "${#required_files[@]}" -eq 0 ]; then
+            echo "No generated_validation.required_files found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          failed=0
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "Missing required file: $file"
+              failed=1
+            fi
+          done
+
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo "All required files present."
+
+      - name: Validate demo submodule
+        shell: bash
+        run: |
+          if [ ! -d "demo" ]; then
+            echo "Missing demo/ directory"
+            exit 1
+          fi
+
+          if ! git ls-tree HEAD demo 2>/dev/null | grep -q '^160000'; then
+            if ! grep -qE '^\[submodule' .gitmodules 2>/dev/null || ! grep -q '"demo"' .gitmodules 2>/dev/null; then
+              echo "demo/ directory exists but is not a registered git submodule."
+              echo "Expected: demo/ must be a git submodule (check .gitmodules)."
+              exit 1
+            fi
+          fi
+
+          echo "demo/ submodule check passed."
+
+      - name: Validate forbidden artifacts are absent
+        shell: bash
+        run: |
+          shopt -s globstar nullglob
+          extract_generated_list() {
+            local section="$1"
+            awk -v section="$section" '
+              /^generated_validation:/ { in_generated=1; next }
+              in_generated && /^[^[:space:]].*:/ && !/^generated_validation:/ { in_generated=0 }
+              in_generated && $0 ~ "^[[:space:]]+"section":" { in_section=1; next }
+              in_generated && in_section && /^[[:space:]]+[^[:space:]-]/ { in_section=0 }
+              in_generated && in_section && /^[[:space:]]*-[[:space:]]*/ {
+                sub(/^[[:space:]]*-[[:space:]]*/, "", $0)
+                gsub(/^"|"$/, "", $0)
+                print $0
+              }
+            ' .github/template-manifest.yml
+          }
+
+          mapfile -t manifest_globs < <(extract_generated_list forbidden_globs)
+
+          if [ "${#manifest_globs[@]}" -eq 0 ]; then
+            echo "No generated_validation.forbidden_globs found in .github/template-manifest.yml"
+            exit 1
+          fi
+
+          forbidden_globs=()
+          allowed_globs=()
+          for pattern in "${manifest_globs[@]}"; do
+            if [[ "$pattern" == !* ]]; then
+              allowed_globs+=("${pattern#!}")
+            else
+              forbidden_globs+=("$pattern")
+            fi
+          done
+
+          declare -A allowed_matches
+          for pattern in "${allowed_globs[@]}"; do
+            while IFS= read -r match; do
+              allowed_matches["$match"]=1
+            done < <(compgen -G "$pattern" 2>/dev/null || true)
+          done
+
+          failed=0
+          for pattern in "${forbidden_globs[@]}"; do
+            while IFS= read -r match; do
+              if [[ -n "${allowed_matches["$match"]+x}" ]]; then
+                continue
+              fi
+              echo "Forbidden artifact matched pattern '$pattern': $match"
+              failed=1
+            done < <(compgen -G "$pattern" 2>/dev/null || true)
+          done
+
+          if [ "$failed" -ne 0 ]; then
+            exit 1
+          fi
+          echo "No forbidden artifacts found."
+
+      - name: Validate version-change policy
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          base_sha="${{ github.event.pull_request.base.sha }}"
+          head_sha="${{ github.event.pull_request.head.sha }}"
+          changed_files="$(git diff --name-only "$base_sha" "$head_sha")"
+
+          echo "Changed files between PR base and head:"
+          echo "$changed_files"
+
+          if echo "$changed_files" | grep -qx "TEMPLATE_VERSION"; then
+            echo "TEMPLATE_VERSION change detected"
+
+            if ! echo "$changed_files" | grep -qx "TEMPLATE_CHANGELOG.md"; then
+              echo "TEMPLATE_VERSION changed but TEMPLATE_CHANGELOG.md was not updated"
+              exit 1
+            fi
+
+            version="$(tr -d '\r\n' < TEMPLATE_VERSION)"
+
+            if ! [[ "$version" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "TEMPLATE_VERSION must follow semver with v prefix (example v1.2.3)"
+              exit 1
+            fi
+
+            if ! grep -Eq "^## ${version} - [0-9]{4}-[0-9]{2}-[0-9]{2}$" TEMPLATE_CHANGELOG.md; then
+              echo "Missing changelog heading for changed version: ${version}"
+              exit 1
+            fi
+
+            expected_line="Current baseline: \`${version}\`"
+            if ! grep -Fq "$expected_line" README.md; then
+              echo "README baseline line must be updated when TEMPLATE_VERSION changes"
+              exit 1
+            fi
+
+            echo "Version-change policy checks passed"
+          else
+            echo "TEMPLATE_VERSION not changed in this PR, skipping version-change checks"
+          fi
+
+          echo "Template structure validation passed"

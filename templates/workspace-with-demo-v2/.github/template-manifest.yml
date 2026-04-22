@@ -1,0 +1,185 @@
+template_name: workspace-with-demo
+template_version: v2.0.0
+description: Private workspace + public demo submodule iskeleti, guvenlik-sikilastirilmis
+
+# ─────────────────────────────────────────────────
+# Harmonia repo'sundaki template kaynagini dogrular
+# ─────────────────────────────────────────────────
+source_validation:
+  required_dirs:
+    - file-templates
+    - file-templates/development
+    - file-templates/development/decisions
+    - file-templates/development/conventions
+    - file-templates/development/guides
+    - file-templates/development/checklists
+    - file-templates/development/glossary
+    - file-templates/development/backlogs
+    - file-templates/development/sprints
+    - file-templates/docs
+    - file-templates/docs/architecture
+    - file-templates/docs/installation
+    - file-templates/workflows
+    - scripts
+
+  required_files:
+    - README.md
+    - TEMPLATE_VERSION
+    - TEMPLATE_CHANGELOG.md
+    - .github/template-manifest.yml
+    - scripts/install.ps1
+    - scripts/install.sh
+    - scripts/New-DirectoryStructure.ps1
+    - scripts/New-FileSet.ps1
+    - scripts/Set-GitRepositories.ps1
+    - scripts/Test-TemplateStructure.ps1
+    - scripts/Test-SecretsInDemo.ps1
+    - scripts/Sync-ToDemo.ps1
+    - scripts/Update-TemplateVersion.ps1
+    - file-templates/README.md
+    - file-templates/TEMPLATE_IDENTITY.yml
+    - file-templates/backups/README.md
+    - file-templates/development/README.md
+    - file-templates/development/backlogs/backlog.md
+    - file-templates/development/sprints/current.md
+    - file-templates/development/decisions/0001-workspace-as-root.md
+    - file-templates/development/decisions/0002-demo-as-public-submodule.md
+    - file-templates/development/decisions/0003-backups-latest-json-model.md
+    - file-templates/development/decisions/0004-manifest-driven-validation.md
+    - file-templates/development/decisions/0005-script-only-template.md
+    - file-templates/development/conventions/naming-conventions.md
+    - file-templates/development/conventions/folder-structure.md
+    - file-templates/development/conventions/commit-message-style.md
+    - file-templates/development/conventions/versioning-strategy.md
+    - file-templates/development/guides/how-to-sync-demo.md
+    - file-templates/development/guides/how-to-update-submodule.md
+    - file-templates/development/guides/how-to-run-validation.md
+    - file-templates/development/guides/how-to-release.md
+    - file-templates/development/checklists/pre-release-checklist.md
+    - file-templates/development/checklists/workspace-setup-checklist.md
+    - file-templates/development/glossary/terms.md
+    - file-templates/docs/index.md
+    - file-templates/docs/architecture/overview.md
+    - file-templates/docs/architecture/workspace-as-root.md
+    - file-templates/docs/architecture/demo-as-submodule.md
+    - file-templates/docs/installation/phase-0-prerequisites.md
+    - file-templates/docs/installation/phase-1-private-workspace-repo.md
+    - file-templates/docs/installation/phase-2-public-demo-repo.md
+    - file-templates/docs/installation/phase-3-submodule-link.md
+    - file-templates/docs/installation/phase-4-security-validation.md
+    - file-templates/docs/installation/phase-5-first-deploy.md
+    - file-templates/workflows/ci.yml
+    - file-templates/workflows/release.yml
+    - file-templates/workflows/template-validation.yml
+
+  forbidden_globs:
+    - "**/.env"
+    - "**/.env.*"
+    - "!**/.env.example"
+    - "**/secrets.*"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/credentials.*"
+
+# ─────────────────────────────────────────────────
+# Kullanicinin uretilen workspace'ini dogrular
+# ─────────────────────────────────────────────────
+generated_validation:
+  required_dirs:
+    - docs
+    - docs/architecture
+    - docs/installation
+    - development
+    - development/backlogs
+    - development/sprints
+    - development/decisions
+    - development/conventions
+    - development/guides
+    - development/checklists
+    - development/glossary
+    - scripts
+    - backups
+    - .github
+    - .github/workflows
+
+  required_files:
+    - README.md
+    - TEMPLATE_VERSION
+    - TEMPLATE_CHANGELOG.md
+    - TEMPLATE_IDENTITY.yml
+    - .gitignore
+    - .editorconfig
+    - .secretscanignore
+    - .github/template-manifest.yml
+    - .github/workflows/template-validation.yml
+    - .github/workflows/release.yml
+    - .github/workflows/ci.yml
+    - docs/index.md
+    - docs/architecture/overview.md
+    - docs/architecture/workspace-as-root.md
+    - docs/architecture/demo-as-submodule.md
+    - docs/installation/phase-0-prerequisites.md
+    - docs/installation/phase-1-private-workspace-repo.md
+    - docs/installation/phase-2-public-demo-repo.md
+    - docs/installation/phase-3-submodule-link.md
+    - docs/installation/phase-4-security-validation.md
+    - docs/installation/phase-5-first-deploy.md
+    - development/README.md
+    - development/backlogs/backlog.md
+    - development/sprints/current.md
+    - development/decisions/0001-workspace-as-root.md
+    - development/decisions/0002-demo-as-public-submodule.md
+    - development/decisions/0003-backups-latest-json-model.md
+    - development/decisions/0004-manifest-driven-validation.md
+    - development/decisions/0005-script-only-template.md
+    - development/conventions/naming-conventions.md
+    - development/conventions/folder-structure.md
+    - development/conventions/commit-message-style.md
+    - development/conventions/versioning-strategy.md
+    - development/guides/how-to-sync-demo.md
+    - development/guides/how-to-update-submodule.md
+    - development/guides/how-to-run-validation.md
+    - development/guides/how-to-release.md
+    - development/checklists/pre-release-checklist.md
+    - development/checklists/workspace-setup-checklist.md
+    - development/glossary/terms.md
+    - scripts/Test-TemplateStructure.ps1
+    - scripts/Sync-ToDemo.ps1
+    - scripts/Update-TemplateVersion.ps1
+    - scripts/Test-SecretsInDemo.ps1
+    - backups/README.md
+
+  # Demo durum bazli dogrulama — dosya bazli degil
+  demo_checks:
+    - type: is_submodule
+      path: demo
+      description: "demo/ klasoru bir git submodule olmali"
+    - type: dir_exists
+      path: demo
+      description: "demo/ klasoru mevcut olmali"
+
+  forbidden_globs:
+    - "**/.env"
+    - "**/.env.*"
+    - "!**/.env.example"
+    - "**/secrets.*"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/credentials.*"
+
+# ─────────────────────────────────────────────────
+# Sync-ToDemo.ps1 icin dokumantasyon (script sabit liste kullanir)
+# PR review'da script listesi ile bu liste karsilastirilir
+# ─────────────────────────────────────────────────
+sync_denylist:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/secrets.*"
+  - "**/*.pem"
+  - "**/*.key"
+  - "**/credentials.*"
+  - "backups/**"
+  - "development/**"
+  - ".github/template-manifest.yml"
+  - "TEMPLATE_IDENTITY.yml"
+  - ".secretscanignore"
