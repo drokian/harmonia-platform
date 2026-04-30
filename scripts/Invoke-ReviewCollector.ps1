@@ -98,9 +98,9 @@ function Invoke-GhProcess {
     param(
         [Parameter(Mandatory)][string[]]$Arguments
     )
-    # gh CLI UTF-8 JSON üretir; ancak PowerShell 5 (Desktop) konsol encoding'i
-    # (IBM857 vb.) StandardOutput'u yanlış okur. ReadToEndAsync + geçici dosya
-    # kombinasyonu encoding sorununu tamamen devre dışı bırakır.
+    # gh CLI çıktısını UTF-8 olarak okumak için process encoding ayarlarını açıkça belirliyoruz.
+    # Geçici dosya kullanılmaz; stdout ve stderr deadlock riskini azaltmak için
+    # eş zamanlı olarak ReadToEndAsync() ile okunur.
     $ghPath = (Get-Command gh -ErrorAction Stop).Source
     $psi = [System.Diagnostics.ProcessStartInfo]::new($ghPath)
     foreach ($arg in $Arguments) { $psi.ArgumentList.Add($arg) }

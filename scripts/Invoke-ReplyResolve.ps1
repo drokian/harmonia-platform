@@ -65,7 +65,7 @@ $ErrorActionPreference = 'Stop'
 [Console]::InputEncoding  = [System.Text.Encoding]::UTF8
 $OutputEncoding           = [System.Text.Encoding]::UTF8
 
-$Red
+$Red = "`e[31m"
 $Green = "`e[32m"
 $Yellow = "`e[33m"
 $Cyan = "`e[36m"
