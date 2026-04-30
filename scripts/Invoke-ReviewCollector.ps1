@@ -5,7 +5,7 @@
     Collects Copilot review artifacts for a pull request.
 .DESCRIPTION
     PowerShell 7 equivalent of review-collector_v0.2.sh.
-    Produces artifacts under development/.ai-review/<owner>.<repo>/PR-<number>/:
+    Produces artifacts under ai-review/<repo>/PR<number>/:
     - copilot-comments.json
     - copilot-reviews.json
     - review-threads.json
@@ -15,7 +15,7 @@
     - v1.0.0 (2026-04-18): İlk sürüm.
     - v1.1.0 (2026-04-20): GraphQL sorguları için güvenli değişken yönetimi (-f/-F) eklendi.
     - v1.2.0 (2026-04-22): API istekleri Start-ThreadJob ile asenkron hale getirildi.
-    - v1.2.1 (2026-04-23): Hata yönetimi ve kullanıcı geri bildirimleri geliştirildi. Outputdir yapısı optimize edildi.
+    - v1.3.0 (2026-04-30): [Console]::OutputEncoding UTF-8 zorlandı; IBM857 mojibake sorunu giderildi.
 .PARAMETER Owner
     Repository owner (org/user).
 .PARAMETER Repo
@@ -38,9 +38,14 @@ param(
     [string]$PrNumber
 )
 
-$ScriptVersion = "v1.2.1"
+$ScriptVersion = "v1.3.0"
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# gh CLI UTF-8 çıktısını doğru okumak için konsol encoding'i zorla
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+$OutputEncoding           = [System.Text.Encoding]::UTF8
 
 $Cyan = "`e[36m"
 $Green = "`e[32m"
@@ -89,6 +94,31 @@ function Ensure-Tools {
     }
 }
 
+function Invoke-GhProcess {
+    param(
+        [Parameter(Mandatory)][string[]]$Arguments
+    )
+    # gh CLI UTF-8 JSON üretir; ancak PowerShell 5 (Desktop) konsol encoding'i
+    # (IBM857 vb.) StandardOutput'u yanlış okur. ReadToEndAsync + geçici dosya
+    # kombinasyonu encoding sorununu tamamen devre dışı bırakır.
+    $ghPath = (Get-Command gh -ErrorAction Stop).Source
+    $psi = [System.Diagnostics.ProcessStartInfo]::new($ghPath)
+    foreach ($arg in $Arguments) { $psi.ArgumentList.Add($arg) }
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError  = $true
+    $psi.UseShellExecute        = $false
+    $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+    $psi.StandardErrorEncoding  = [System.Text.Encoding]::UTF8
+    $proc = [System.Diagnostics.Process]::Start($psi)
+    # Deadlock'u önlemek için stdout+stderr'i eş zamanlı oku
+    $stdoutTask = $proc.StandardOutput.ReadToEndAsync()
+    $stderrTask = $proc.StandardError.ReadToEndAsync()
+    $proc.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    return [PSCustomObject]@{ ExitCode = $proc.ExitCode; Stdout = $stdout; Stderr = $stderr }
+}
+
 function Gh-ApiJson {
     param(
         [Parameter(Mandatory)]
@@ -97,14 +127,14 @@ function Gh-ApiJson {
         [string]$Context
     )
 
-    $result = & gh @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
+    $proc = Invoke-GhProcess -Arguments $Arguments
+    if ($proc.ExitCode -ne 0) {
         Log-Err "$Context başarısız."
-        $result | ForEach-Object { Write-Host "[ERROR]   $_" }
+        $proc.Stderr.Split("`n") | ForEach-Object { Write-Host "[ERROR]   $_" }
         exit 1
     }
 
-    $outStr = ($result -join "`n").Trim()
+    $outStr = $proc.Stdout.Trim()
 
     try {
         return $outStr | ConvertFrom-Json -Depth 100
@@ -335,7 +365,7 @@ Show-Banner
 Ensure-Tools
 
 # Harmonia standart klasör yapısı
-$outputDir = Join-Path -Path "development/.ai-review/$Owner.$Repo" -ChildPath "PR-$PrNumber"
+$outputDir = Join-Path -Path "ai-review/$Repo" -ChildPath "PR$PrNumber"
 
 # Klasörü oluştur
 Safe-CreateDirectory -Path $outputDir
