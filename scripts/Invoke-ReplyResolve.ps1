@@ -11,6 +11,10 @@
     - filter-text
     - filter-regex
     - map
+.NOTES
+    Version History:
+    - v1.0.0 (2026-04-18): İlk sürüm.
+    - v1.1.0 (2026-04-30): [Console]::OutputEncoding UTF-8 zorlandı; gh CLI çağrıları System.Diagnostics.Process tabanlı Invoke-GhProcess sarmalayıcısına taşındı; IBM857 mojibake sorunu giderildi.
 .PARAMETER Owner
     GitHub owner (org/user).
 .PARAMETER Repo
@@ -52,8 +56,14 @@ param(
     [string]$MapFile = ''
 )
 
+$ScriptVersion = "v1.1.0"
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# gh CLI UTF-8 çıktısını doğru okumak için konsol encoding'i zorla
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+[Console]::InputEncoding  = [System.Text.Encoding]::UTF8
+$OutputEncoding           = [System.Text.Encoding]::UTF8
 
 $Red = "`e[31m"
 $Green = "`e[32m"
@@ -142,15 +152,34 @@ function Read-JsonFile([string]$Path) {
     return Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json -Depth 100
 }
 
+function Invoke-GhProcess {
+    param([Parameter(Mandatory)][string[]]$Arguments)
+    $ghPath = (Get-Command gh -ErrorAction Stop).Source
+    $psi = [System.Diagnostics.ProcessStartInfo]::new($ghPath)
+    foreach ($arg in $Arguments) { $psi.ArgumentList.Add($arg) }
+    $psi.RedirectStandardOutput = $true
+    $psi.RedirectStandardError  = $true
+    $psi.UseShellExecute        = $false
+    $psi.StandardOutputEncoding = [System.Text.Encoding]::UTF8
+    $psi.StandardErrorEncoding  = [System.Text.Encoding]::UTF8
+    $proc = [System.Diagnostics.Process]::Start($psi)
+    $stdoutTask = $proc.StandardOutput.ReadToEndAsync()
+    $stderrTask = $proc.StandardError.ReadToEndAsync()
+    $proc.WaitForExit()
+    $stdout = $stdoutTask.GetAwaiter().GetResult()
+    $stderr = $stderrTask.GetAwaiter().GetResult()
+    return [PSCustomObject]@{ ExitCode = $proc.ExitCode; Stdout = $stdout; Stderr = $stderr }
+}
+
 function Invoke-Gh {
     param([string[]]$Arguments, [string]$Context)
-    $result = & gh @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
+    $proc = Invoke-GhProcess -Arguments $Arguments
+    if ($proc.ExitCode -ne 0) {
         Log-Err "$Context basarisiz."
-        $result | ForEach-Object { Write-Host "[ERROR]   $_" }
+        $proc.Stderr.Split("`n") | ForEach-Object { Write-Host "[ERROR]   $_" }
         exit 1
     }
-    return ($result -join "`n")
+    return $proc.Stdout
 }
 
 function Get-ReplyForComment([string]$CommentBody, [string]$FallbackReplyText, [object[]]$ReplyMap) {
