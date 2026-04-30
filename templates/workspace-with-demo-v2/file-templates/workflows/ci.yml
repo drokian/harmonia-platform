@@ -33,4 +33,4 @@ jobs:
           fi
 
       - name: Run tests placeholder
-        run: echo "TODO: add project-specific test command"
+        run: 'echo "TODO: add project-specific test command"'
